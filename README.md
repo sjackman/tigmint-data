@@ -1,0 +1,10 @@
+# Correct misassemblies using Tigmint (GIAB HG004)
+
+Chromium reads
+`/projects/btl/datasets/hsapiens/giab/HG004/10XGenomics/NA24143-chromium_fastqs-PostLongranger/NA24143-chromium_longranger/outs/barcoded.fastq.gz`
+
+ABySS 2.0 assembly (`abyss-2.0/bionano+arcs-scaffolds.fa`)
+`/projects/btl/syeo/ARCS/hsapiens/abyss/chromium/NA24143/ARCS-runs/bc079e1/human-bionano/26GbFilter/30kbEnds/c5a-links_1.8.2/human_c5a_l5_a0.3_filtered.scaffolds.fa`
+
+I believe ARCS was used to scaffold this assembly:
+`/projects/btl/bloom-dbg/assembler-comparison/bloom-dbg/hsapiens/HG004/bfc/d2b18d3/26G/N7/c3/k144/bionano/aggressive-B2-N2/hsapiens-scaffolds.fa.lrz`
