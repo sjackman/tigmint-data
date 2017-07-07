@@ -1,5 +1,13 @@
 # Correct misassemblies using Tigmint (GIAB HG004)
 
+# Molecule summary report
+
+| Assembly |
+|----------|
+| [abyss2_bionano_arcs](abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.summary.md)
+
+# Data
+
 Chromium reads
 ```
 /projects/btl/datasets/hsapiens/giab/HG004/10XGenomics/NA24143-chromium_fastqs-PostLongranger/NA24143-chromium_longranger/outs/barcoded.fastq.gz
