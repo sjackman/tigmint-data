@@ -1,8 +1,5 @@
 # Correct misassemblies using Tigmint
 
-# Draft genome
-draft=abyss2_bionano_arcs
-
 # Number of threads
 t=64
 
@@ -12,13 +9,21 @@ gzip=pigz -p$t
 .DELETE_ON_ERROR:
 .SECONDARY:
 
-all: \
-	abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.bai \
-	abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.tsv \
-	abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.bed.bam.bai
+all: abyss2 abyss2_bionano_arcs
 
-report: \
-	abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.summary.html
+abyss2:
+	$(MAKE) draft=$@ \
+		abyss2.hg004.bx.as100.nm5.bam.bai \
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.tsv \
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.bed.bam.bai \
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.summary.html
+
+abyss2_bionano_arcs: \
+	$(MAKE) draft=$@ \
+		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.bai \
+		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.tsv \
+		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.bed.bam.bai \
+		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.summary.html
 
 # Add the barcode to the read ID, and skip reads without barcodes.
 %.bx.fq.gz: %.longranger.basic.fq.gz
