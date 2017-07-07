@@ -32,12 +32,12 @@ output_tsv_filename <- params$output_tsv
 
 # Calculate Lx and Nx statistics, like L50 and N50
 ```{r calculate-n50}
-weighted_median_lx <- function(x, g = sum(x), p = 0.5)
+weighted_median_lx <- function(x, g = sum(as.numeric(x)), p = 0.5)
 {
-	tibble(x = x) %>% arrange(desc(x)) %>% mutate(i = seq_along(x), fraction = cumsum(x) / g) %>% filter(fraction >= p) %$% i[[1]]
+	tibble(x = x) %>% arrange(desc(x)) %>% mutate(i = seq_along(x), fraction = cumsum(as.numeric(x)) / g) %>% filter(fraction >= p) %$% i[[1]]
 }
 
-weighted_median_nx <- function(x, g = sum(x), p = 0.5)
+weighted_median_nx <- function(x, g = sum(as.numeric(x)), p = 0.5)
 {
 	tibble(x = x) %>% arrange(desc(x)) %$% x[[weighted_median_lx(x, g, p)]]
 }
