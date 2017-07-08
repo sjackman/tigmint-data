@@ -23,7 +23,9 @@ abyss2_bionano_arcs:
 		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.bai \
 		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.tsv \
 		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.bed.bam.bai \
-		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.summary.html
+		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.summary.html \
+		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.bed.depth.stats.tsv \
+		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.starts.breakpoints.tsv
 
 # Add the barcode to the read ID, and skip reads without barcodes.
 %.bx.fq.gz: %.longranger.basic.fq.gz
@@ -115,3 +117,47 @@ nm=5
 # Convert BED to BAM.
 %.bed.bam: %.bed $(draft).fa.fai
 	awk '$$2 != $$3' $< | bedtools bedtobam -i - -g $(draft).fa.fai | samtools sort -@$t -Obam -o $@
+
+# Compute the depth of coverage of a BAM file.
+%.bam.depth.tsv: %.bam
+	(printf "Rname\tPos\tDepth\n"; bedtools genomecov -d -ibam $<) >$@
+
+# Compute the depth of coverage of a BED file.
+%.bed.depth.tsv: %.bed $(draft).fa.fai
+	(printf "Rname\tPos\tDepth\n"; awk '$$2 != $$3' $< | bedtools genomecov -d -g $(draft).fa.fai -i -) >$@
+
+# Calculate depth of coverage statistics.
+%.depth.stats.tsv: %.depth.tsv
+	mlr --tsvlite stats1 -a count,p25,p50,p75,mean,stddev -f Depth $< >$@
+
+# Calculate depth of coverage statistics per sequence.
+%.depth.seqstats.tsv: %.depth.tsv
+	mlr --tsvlite stats1 -a count,p25,p50,p75,mean,stddev -f Depth -g Rname $< >$@
+
+# Identify breakpoints
+
+# Select BED records of a given size or larger.
+size_threshold=2000
+%.size$(size_threshold).bed: %.bed
+	awk '$$3 - $$2 >= $(size_threshold)' $< >$@
+
+# Count start positions of molecules larger than a threshold size.
+starts_size_threshold=2000
+%.molecule.starts.tsv: %.molecule.tsv
+	mlr --tsvlite \
+		then filter '$$Size >= $(starts_size_threshold)' \
+		then count-distinct -f Rname,Start \
+		then rename Start,Pos,count,Starts \
+		then sort -f Rname -n Pos \
+		$< >$@
+
+# Join the tables of depth of coverage and number of molecule starts.
+%.molecule.size$(size_threshold).depth.starts.tsv: %.molecule.size$(size_threshold).bed.depth.tsv %.molecule.starts.tsv
+	mlr --tsvlite join -u -j Rname,Pos -f $^ >$@
+
+# Select positions with low depth of coverage and high numer of molecule starts.
+depth_threshold=100
+starts_threshold=4
+pos_threshold=200
+%.depth.starts.breakpoints.tsv: %.depth.starts.tsv
+	mlr --tsvlite filter '$$Depth < $(depth_threshold) && $$Starts >= $(starts_threshold) && $$Pos >= $(pos_threshold)' $< >$@
