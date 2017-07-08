@@ -18,7 +18,7 @@ abyss2:
 		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.bed.bam.bai \
 		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.summary.html
 
-abyss2_bionano_arcs: \
+abyss2_bionano_arcs:
 	$(MAKE) draft=$@ \
 		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.bai \
 		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.tsv \
