@@ -16,7 +16,9 @@ abyss2:
 		abyss2.hg004.bx.as100.nm5.bam.bai \
 		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.tsv \
 		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.bed.bam.bai \
-		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.summary.html
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.summary.html \
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.bed.depth.stats.tsv \
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tsv
 
 abyss2_bionano_arcs:
 	$(MAKE) draft=$@ \
@@ -25,7 +27,7 @@ abyss2_bionano_arcs:
 		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.bed.bam.bai \
 		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.summary.html \
 		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.bed.depth.stats.tsv \
-		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.starts.breakpoints.tsv
+		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tsv
 
 # Add the barcode to the read ID, and skip reads without barcodes.
 %.bx.fq.gz: %.longranger.basic.fq.gz
@@ -151,13 +153,17 @@ starts_size_threshold=2000
 		then sort -f Rname -n Pos \
 		$< >$@
 
+# Select position below the coverage threshold.
+depth_threshold=100
+%.depth.$(depth_threshold).tsv: %.depth.tsv
+	mlr --tsvlite filter '$$Depth < $(depth_threshold)' $< >$@
+
 # Join the tables of depth of coverage and number of molecule starts.
-%.molecule.size$(size_threshold).depth.starts.tsv: %.molecule.size$(size_threshold).bed.depth.tsv %.molecule.starts.tsv
+%.molecule.size$(size_threshold).depth.$(depth_threshold).starts.tsv: %.molecule.size$(size_threshold).bed.depth.$(depth_threshold).tsv %.molecule.starts.tsv
 	mlr --tsvlite join -u -j Rname,Pos -f $^ >$@
 
 # Select positions with low depth of coverage and high numer of molecule starts.
-depth_threshold=100
 starts_threshold=4
 pos_threshold=200
-%.depth.starts.breakpoints.tsv: %.depth.starts.tsv
+%.depth.$(depth_threshold).starts.breakpoints.tsv: %.depth.$(depth_threshold).starts.tsv
 	mlr --tsvlite filter '$$Depth < $(depth_threshold) && $$Starts >= $(starts_threshold) && $$Pos >= $(pos_threshold)' $< >$@
