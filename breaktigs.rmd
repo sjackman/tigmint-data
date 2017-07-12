@@ -7,15 +7,15 @@ output:
 params:
   input_tsv:
     label: "Input TSV file of misassemblies"
-    value: "psitchensiscpmt_2.breakpoints.tsv"
+    value: "breakpoints.tsv"
     input: text
   input_fai:
     label: "Input FAI file of scaffold sizes"
-    value: "psitchensiscpmt_2.fa.fai"
+    value: "draft.fa.fai"
     input: text
   output_bed:
     label: "Output BED file of breaktig coordinates"
-    value: "psitchensiscpmt_2.breakpoints.tigs.bed"
+    value: "breakpoints.tigs.bed"
     input: text
 ---
 
@@ -30,17 +30,17 @@ library(tidyr)
 library(uniqtag)
 
 knit_print.data.frame <- function(x, ...) kable(x) %>% paste(collapse = "\n") %>% asis_output
-misassemblies_filename <- params$input_tsv
-fai_filename <- params$input_fai
-output_bed_filename <- params$output_bed
+input_tsv <- params$input_tsv
+input_fai <- params$input_fai
+output_bed <- params$output_bed
 ```
 
 # Read the data
 ```{r read-data}
-misassemblies_orig <- read_tsv(misassemblies_filename, col_types = cols(Rname = col_character()))
+misassemblies_orig <- read_tsv(input_tsv, col_types = cols(Rname = col_character()))
 misassemblies <- misassemblies_orig %>% select(Rname, Pos)
 
-fai <- read_tsv(fai_filename, col_names = c("Rname", "Pos"), col_types = "ci---")
+fai <- read_tsv(input_fai, col_names = c("Rname", "Pos"), col_types = "ci---")
 ```
 
 # Determine coordinates of subsequences
@@ -57,7 +57,7 @@ bed <- rbind(misassemblies, fai %>%
 
 # Write the BED file to disk
 ```{r write-results}
-bed %>% write_tsv(output_bed_filename, col_names = FALSE)
+bed %>% write_tsv(output_bed, col_names = FALSE)
 ```
 
 # Coordinates of subsequences
