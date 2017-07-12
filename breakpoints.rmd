@@ -79,7 +79,7 @@ depth_starts %>% write_tsv(depth_starts_tsv)
 
 # Identify breakpoints
 ```{r identify-breakpoints}
-pos_threshold <- 200
+pos_threshold <- 1000
 starts_threshold <- 4
 
 breakpoints <- depth_starts %>%
