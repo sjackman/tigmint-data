@@ -146,6 +146,20 @@ nm=5
 %.depth.seqstats.tsv: %.depth.tsv
 	mlr --tsvlite stats1 -a count,p25,p50,p75,mean,stddev -f Depth -g Rname $< >$@
 
+# Compute statistics on the depth of coverage of a BED file.
+%.bed.genomecov.tsv: %.bed $(draft).fa.fai
+	(printf "Rname\tDepth\tCount\tRsize\tFraction\n"; awk '$$2 != $$3' $< | bedtools genomecov -g $(draft).fa.fai -i -) >$@
+
+# Calculate depth of coverage statistics from bedtools genomecov.
+%.genomecov.stats.tsv: %.genomecov.tsv
+	mlr --tsvlite \
+		then filter '$$Rname == "genome" && $$Depth > 0' \
+		then step -a rsum -f Fraction \
+		then put -q '@Depth_count += $$Count; if (is_null(@p25) && $$Fraction_rsum >= 0.25) { @p25 = $$Depth }; if (is_null(@p50) && $$Fraction_rsum >= 0.50) { @p50 = $$Depth }; if (is_null(@p75) && $$Fraction_rsum >= 0.75) { @p75 = $$Depth } end { emitf @Depth_count, @p25, @p50, @p75 }' \
+		then rename p25,Depth_p25,p50,Depth_p50,p75,Depth_p75 \
+		then put '$$Depth_IQR = $$Depth_p75 - $$Depth_p25' \
+		$< >$@
+
 # Identify breakpoints
 
 # Select BED records of a given size or larger.
