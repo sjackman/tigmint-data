@@ -1,6 +1,8 @@
 brew 'pigz'
 tap 'homebrew/science'
+brew 'abyss'
 brew 'bedtools'
 brew 'bwa'
 brew 'miller'
 brew 'samtools'
+brew 'seqtk'
