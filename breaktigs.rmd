@@ -23,6 +23,7 @@ params:
 library(dplyr)
 library(knitr)
 library(readr)
+library(tidyr)
 library(uniqtag)
 
 knit_print.data.frame <- function(x, ...) kable(x) %>% paste(collapse = "\n") %>% asis_output
