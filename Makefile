@@ -20,8 +20,11 @@ abyss2:
 		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.tsv \
 		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.bed.bam.bai \
 		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.summary.html \
-		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.bed.depth.stats.tsv \
-		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tsv
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.bed.genomecov.stats.tsv \
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tigs.fa \
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tigs.abyss-fac.tsv \
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tigs.scaftigs.abyss-fac.tsv \
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tigs.scaftigs.GRCh38.samtobreak.tsv
 
 abyss2_bionano_arcs:
 	$(MAKE) draft=$@ \
@@ -32,8 +35,11 @@ abyss2_bionano_arcs:
 		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.tsv \
 		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.bed.bam.bai \
 		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.summary.html \
-		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.bed.depth.stats.tsv \
-		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tsv
+		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.bed.genomecov.stats.tsv \
+		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tigs.fa \
+		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tigs.abyss-fac.tsv \
+		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tigs.scaftigs.abyss-fac.tsv \
+		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tigs.scaftigs.GRCh38.samtobreak.tsv
 
 # Rename the LINKS scaffolds.
 abyss2_bionano_arcs.fa: %.fa: %.orig.fa
