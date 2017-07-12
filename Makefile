@@ -182,6 +182,14 @@ pos_threshold=1000
 %.size$(size_threshold).depth.starts.breakpoints.tsv: %.size$(size_threshold).bed.depth.tsv %.starts.tsv
 	Rscript -e 'rmarkdown::render("breakpoints.rmd", "html_notebook", "$*.depth.starts.breakpoints.nb.html", params = list(depth_tsv="$<", starts_tsv="$*.starts.tsv", depth_starts_tsv="$*.depth.starts.tsv", breakpoints_tsv="$@"))'
 
+# Determine coordinates of the breaktig subsequences.
+%.breakpoints.tigs.bed: %.breakpoints.tsv $(draft).fa.fai
+	Rscript -e 'rmarkdown::render("breaktigs.rmd", "html_notebook", "$*.breakpoints.tigs.nb.html", params = list(input_tsv="$<", input_fai="$(draft).fa.fai", output_bed="$@"))'
+
+# Break scaffolds at the breakpoints.
+%.breakpoints.tigs.fa: %.breakpoints.tigs.bed $(draft).fa
+	bedtools getfasta -name -fi $*.fa -bed $< | sed 's/::/ /;s/^NN*//;s/NN*$$//' >$@
+
 ################################################################################
 # Calculate assembly contiguity and correctness metrics.
 
