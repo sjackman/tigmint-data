@@ -22,11 +22,7 @@ params:
 ```{r setup, message=FALSE}
 library(dplyr)
 library(knitr)
-library(magrittr)
 library(readr)
-library(ggplot2)
-library(scales)
-library(tidyr)
 library(uniqtag)
 
 knit_print.data.frame <- function(x, ...) kable(x) %>% paste(collapse = "\n") %>% asis_output
@@ -50,8 +46,7 @@ glimpse(fai)
 
 # Determine coordinates of subsequences
 ```{r transform}
-bed <- rbind(breakpoints, fai %>%
-	mutate(Pos = 0L), fai) %>%
+bed <- rbind(breakpoints, mutate(fai, Pos = 0L), fai) %>%
 	arrange(!is.na(as.integer(Rname)), as.integer(Rname), Rname, Pos) %>%
 	mutate(Start = Pos, End = lead(Pos)) %>%
 	select(-Pos) %>%
