@@ -13,6 +13,9 @@ all: abyss2 abyss2_bionano_arcs
 
 abyss2:
 	$(MAKE) draft=$@ \
+		abyss2.abyss-fac.tsv \
+		abyss2.scaftigs.abyss-fac.tsv \
+		abyss2.scaftigs.GRCh38.samtobreak.tsv \
 		abyss2.hg004.bx.as100.nm5.bam.bai \
 		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.tsv \
 		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.bed.bam.bai \
@@ -22,6 +25,9 @@ abyss2:
 
 abyss2_bionano_arcs:
 	$(MAKE) draft=$@ \
+		abyss2_bionano_arcs.abyss-fac.tsv \
+		abyss2_bionano_arcs.scaftigs.abyss-fac.tsv \
+		abyss2_bionano_arcs.scaftigs.GRCh38.samtobreak.tsv \
 		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.bai \
 		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.tsv \
 		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.bed.bam.bai \
@@ -175,3 +181,44 @@ pos_threshold=200
 # Identify breakpoints with low depth of coverage and high number of molecule starts.
 %.size$(size_threshold).depth.starts.breakpoints.tsv: %.size$(size_threshold).bed.depth.tsv %.starts.tsv
 	Rscript -e 'rmarkdown::render("breakpoints.rmd", "html_notebook", "$*.depth.starts.breakpoints.nb.html", params = list(depth_tsv="$<", starts_tsv="$*.starts.tsv", depth_starts_tsv="$*.depth.starts.tsv", breakpoints_tsv="$@"))'
+
+################################################################################
+# Calculate assembly contiguity and correctness metrics.
+
+# Reference genome
+ref=GRCh38
+ref_fa=$(ref).fa
+ref_gff=/projects/btl/reference_genomes/H_sapiens/GRCh38/Homo_sapiens.GRCh38.86.chr.gff3
+
+# Size of the reference genome with Ns
+GwithN=3088269832
+
+# Size of the reference genome without Ns
+GwithoutN=2937639113
+
+# Path to ABySS executables
+abyss_bin=/gsc/btl/linuxbrew/Cellar/abyss/2.0.2/bin
+
+# BWA
+
+# Align an assembly to the reference using BWA-MEM.
+%.$(ref).sam: %.fa
+	time bwa mem -xintractg -t$t $(ref_fa) $< >$@
+
+# ABySS
+
+# Convert scaffolds to scaftigs.
+%.scaftigs.fa: %.fa
+	seqtk seq $< | tr _ '~' | $(abyss_bin)/abyss-fatoagp -f $@ >$@.agp
+
+# Calculate assembly contiguity metrics with abyss-fac.
+%.abyss-fac.tsv: %.fa
+	$(abyss_bin)/abyss-fac -G$(GwithN) -t500 $< >$@
+
+# Calculate assembly contiguity and correctness metrics.
+%.samtobreak.txt: %.sam
+	(echo '==> $< <=='; bin/abyss-samtobreak -G$(GwithN) -l500 $<) >$@
+
+# Convert samtobreak.txt to TSV.
+%.samtobreak.tsv: %.samtobreak.txt
+	bin/abyss-samtobreak-to-tsv $< >$@
