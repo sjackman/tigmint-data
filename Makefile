@@ -29,6 +29,10 @@ abyss2_bionano_arcs:
 		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.bed.depth.stats.tsv \
 		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tsv
 
+# Rename the LINKS scaffolds.
+abyss2_bionano_arcs.fa: %.fa: %.orig.fa
+	gsed 's/scaffold//;s/,[^\t]*//' $< >$@
+
 # Add the barcode to the read ID, and skip reads without barcodes.
 %.bx.fq.gz: %.longranger.basic.fq.gz
 	gunzip -c $< | gawk ' \
