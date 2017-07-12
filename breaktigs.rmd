@@ -6,7 +6,7 @@ output:
     keep_md: true
 params:
   input_tsv:
-    label: "Input TSV file of misassemblies"
+    label: "Input TSV file of breakpoints"
     value: "breakpoints.tsv"
     input: text
   input_fai:
@@ -38,8 +38,8 @@ output_bed <- params$output_bed
 # Read the data
 ```{r read-data}
 input_tsv
-misassemblies_orig <- read_tsv(input_tsv, col_types = cols(Rname = col_character()))
-glimpse(misassemblies_orig)
+breakpoints_orig <- read_tsv(input_tsv, col_types = cols(Rname = col_character()))
+glimpse(breakpoints_orig)
 
 breakpoints <- breakpoints_orig %>% select(Rname, Pos)
 
@@ -50,7 +50,7 @@ glimpse(fai)
 
 # Determine coordinates of subsequences
 ```{r transform}
-bed <- rbind(misassemblies, fai %>%
+bed <- rbind(breakpoints, fai %>%
 	mutate(Pos = 0L), fai) %>%
 	arrange(!is.na(as.integer(Rname)), as.integer(Rname), Rname, Pos) %>%
 	mutate(Start = Pos, End = lead(Pos)) %>%
