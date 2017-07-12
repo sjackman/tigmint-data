@@ -6,6 +6,11 @@ t=64
 # gzip compression program
 gzip=pigz -p$t
 
+# Report run time and memory usage
+export SHELL=zsh -opipefail
+export REPORTTIME=1
+export TIMEFMT=time user=%U system=%S elapsed=%E cpu=%P memory=%M job=%J
+
 .DELETE_ON_ERROR:
 .SECONDARY:
 
