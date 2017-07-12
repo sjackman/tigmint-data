@@ -1,16 +1,20 @@
+*.agp
 *.bam
 *.bam.bai
 *.bed
 *.fa
 *.fa.fai
 *.fq.gz
+*.gff
 *.html
 *.log
 *.lrz
 *.md
 *.orig
 *.png
+*.sam
 *.tsv
+*.txt
 
 # BWA
 *.fa.amb
