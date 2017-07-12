@@ -4,7 +4,12 @@
 *.fa
 *.fa.fai
 *.fq.gz
+*.html
 *.log
+*.lrz
+*.md
+*.orig
+*.png
 *.tsv
 
 # BWA
