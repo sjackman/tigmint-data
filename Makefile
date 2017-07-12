@@ -216,7 +216,6 @@ pos_threshold=1000
 # Reference genome
 ref=GRCh38
 ref_fa=$(ref).fa
-ref_gff=/projects/btl/reference_genomes/H_sapiens/GRCh38/Homo_sapiens.GRCh38.86.chr.gff3
 
 # Size of the reference genome with Ns
 GwithN=3088269832
