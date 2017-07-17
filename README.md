@@ -6,6 +6,7 @@
 |----------|
 | [abyss2](abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.summary.md)
 | [abyss2_bionano_arcs](abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.summary.md)
+| [supernova](supernova.hg004.bx.as100.nm5.bam.mi.bx.molecule.summary.md)
 
 # Data
 

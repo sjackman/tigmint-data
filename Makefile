@@ -14,7 +14,7 @@ export TIMEFMT=time user=%U system=%S elapsed=%E cpu=%P memory=%M job=%J
 .DELETE_ON_ERROR:
 .SECONDARY:
 
-all: abyss2 abyss2_bionano_arcs
+all: abyss2 abyss2_bionano_arcs supernova
 
 abyss2:
 	$(MAKE) draft=$@ \
@@ -45,6 +45,21 @@ abyss2_bionano_arcs:
 		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tigs.abyss-fac.tsv \
 		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tigs.scaftigs.abyss-fac.tsv \
 		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tigs.scaftigs.GRCh38.samtobreak.tsv
+
+supernova:
+	$(MAKE) draft=$@ \
+		supernova.abyss-fac.tsv \
+		supernova.scaftigs.abyss-fac.tsv \
+		supernova.scaftigs.GRCh38.samtobreak.tsv \
+		supernova.hg004.bx.as100.nm5.bam.bai \
+		supernova.hg004.bx.as100.nm5.bam.mi.bx.molecule.tsv \
+		supernova.hg004.bx.as100.nm5.bam.mi.bx.molecule.bed.bam.bai \
+		supernova.hg004.bx.as100.nm5.bam.mi.bx.molecule.summary.html \
+		supernova.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.bed.genomecov.stats.tsv \
+		supernova.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tigs.fa \
+		supernova.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tigs.abyss-fac.tsv \
+		supernova.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tigs.scaftigs.abyss-fac.tsv \
+		supernova.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tigs.scaftigs.GRCh38.samtobreak.tsv
 
 # Rename the LINKS scaffolds.
 abyss2_bionano_arcs.fa: %.fa: %.orig.fa
