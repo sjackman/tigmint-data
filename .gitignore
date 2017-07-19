@@ -6,6 +6,7 @@
 *.fa.fai
 *.fq.gz
 *.gff
+*.gv
 *.html
 *.log
 *.lrz
@@ -22,3 +23,6 @@
 *.fa.bwt
 *.fa.pac
 *.fa.sa
+
+# ARCS
+*.scaffolds
