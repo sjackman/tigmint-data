@@ -234,6 +234,17 @@ pos_threshold=1000
 %.size$(size_threshold).depth.starts.breakpoints.tsv: %.size$(size_threshold).bed.depth.tsv %.starts.tsv
 	Rscript -e 'rmarkdown::render("breakpoints.rmd", "html_notebook", "$*.depth.starts.breakpoints.nb.html", params = list(depth_tsv="$<", starts_tsv="$*.starts.tsv", depth_starts_tsv="$*.depth.starts.tsv", breakpoints_tsv="$@"))'
 
+# Group breakpoints by position.
+group_threshold=1000
+%.breakpoints.grouped.tsv: %.breakpoints.tsv
+	mlr --tsvlite \
+		then step -a delta -g Rname -f Pos \
+		then put '$$NewGroup = $$Pos_delta > 0 && $$Pos_delta < $(group_threshold) ? 0 : 1' \
+		then step -a rsum -f NewGroup \
+		then cut -x -f NewGroup \
+		then rename NewGroup_rsum,BreakpointID \
+		$< >$@
+
 # Determine coordinates of the breaktig subsequences.
 %.breakpoints.tigs.bed: %.breakpoints.tsv $(draft).fa.fai
 	Rscript -e 'rmarkdown::render("breaktigs.rmd", "html_notebook", "$*.breakpoints.tigs.nb.html", params = list(input_tsv="$<", input_fai="$(draft).fa.fai", output_bed="$@"))'
