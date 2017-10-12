@@ -327,3 +327,23 @@ l=10
 # Rename the scaffolds.
 %.links.fa: %.links.scaffolds.fa
 	gsed -r 's/^>scaffold([^,]*),(.*)/>\1 scaffold\1,\2/' $< >$@
+
+# Aggregate the results.
+
+abyss2.depth.100.starts.abyss-fac.tsv: \
+		abyss2.abyss-fac.tsv \
+		abyss2.hg004.c1_e30000_r0.2.arcs.a0.999999_l10.links.abyss-fac.tsv \
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tigs.abyss-fac.tsv \
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tigs.hg004.c1_e30000_r0.2.arcs.a0.999999_l10.links.abyss-fac.tsv \
+		abyss2.scaftigs.abyss-fac.tsv \
+		abyss2.hg004.c1_e30000_r0.2.arcs.a0.999999_l10.links.scaftigs.abyss-fac.tsv \
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tigs.scaftigs.abyss-fac.tsv \
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tigs.hg004.c1_e30000_r0.2.arcs.a0.999999_l10.links.scaftigs.abyss-fac.tsv
+	mlr --tsvlite cat $^ >$@
+
+abyss2.depth.100.starts.samtobreak.tsv: \
+		abyss2.scaftigs.GRCh38.samtobreak.tsv \
+		abyss2.hg004.c1_e30000_r0.2.arcs.a0.999999_l10.links.scaftigs.GRCh38.samtobreak.tsv \
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tigs.scaftigs.GRCh38.samtobreak.tsv \
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tigs.hg004.c1_e30000_r0.2.arcs.a0.999999_l10.links.scaftigs.GRCh38.samtobreak.tsv
+	mlr --tsvlite cat $^ >$@
