@@ -347,3 +347,9 @@ abyss2.depth.100.starts.samtobreak.tsv: \
 		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tigs.scaftigs.GRCh38.samtobreak.tsv \
 		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tigs.hg004.c1_e30000_r0.2.arcs.a0.999999_l10.links.scaftigs.GRCh38.samtobreak.tsv
 	mlr --tsvlite cat $^ >$@
+
+# RMarkdown reports
+
+# Compute precision and recall.
+parameters.html: %.html: %.tsv %.rmd
+	Rscript -e 'rmarkdown::render("$*.rmd", "html_document", "$@", params = list(input_tsv="$<", output_tsv="$*.out.tsv"))'

@@ -1,0 +1,64 @@
+---
+title: Notebook of Correct Misassemblies Using Linked Reads From Large Molecules
+author: Shaun Jackman
+output:
+  html_document:
+    keep_md: true
+params:
+  input_tsv:
+    label: "Input TSV file of parameters and metrics"
+    value: "parameters.tsv"
+    input: text
+  output_tsv:
+    label: "Output TSV file of precision and recall"
+    value: "parameters.out.tsv"
+    input: text
+---
+
+```{r setup, message=FALSE}
+library(dplyr)
+library(ggplot2)
+library(ggrepel)
+library(knitr)
+library(readr)
+
+knit_print.data.frame <- function(x, ...) kable(x) %>% paste(collapse = "\n") %>% asis_output
+input_tsv <- params$input_tsv
+output_tsv <- params$output_tsv
+```
+
+# Read the data
+
+```{r read-data}
+parameters_orig <- read_tsv(input_tsv)
+```
+
+# Compute the precision, recall, and F1 score.
+```{r compute-precision-recall}
+parameters <- parameters_orig %>%
+	mutate(
+		Label = paste("Clipped =", Clipped),
+		TP = P - `P - TP`,
+		FP = `TP + FP` - TP,
+		PPV = TP / `TP + FP`,
+		TPR = TP / P,
+		F1 = 2 * PPV * TPR / (PPV + TPR))
+```
+
+# Precision vs recall scatter plot
+```{r precision-recall}
+ggplot(parameters) +
+	aes(x = TPR, y = PPV, label = Label) +
+	geom_point() +
+	geom_text_repel() +
+	scale_x_continuous(name = "Recall (TPR)", limits = c(0, 0.1)) +
+	scale_y_continuous(name = "Precision (PPV)", limits = c(0, 1)) +
+	theme_bw(base_size = 20) +
+	theme(panel.border = element_blank())
+```
+
+# Precision vs recall table
+```{r precision-recall-table}
+parameters %>% select(-Label) %>% write_tsv(output_tsv)
+parameters
+```
