@@ -38,9 +38,9 @@ parameters_orig <- read_tsv(input_tsv)
 parameters <- parameters_orig %>%
 	mutate(
 		Label = paste("Clipped =", Clipped),
-		TP = P - `P - TP`,
-		FP = `TP + FP` - TP,
-		PPV = TP / `TP + FP`,
+		TP = P - FN,
+		FP = PP - TP,
+		PPV = TP / PP,
 		TPR = TP / P,
 		F1 = 2 * PPV * TPR / (PPV + TPR))
 ```
