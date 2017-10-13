@@ -42,7 +42,8 @@ parameters <- parameters_orig %>%
 		FP = PP - TP,
 		PPV = TP / PP,
 		TPR = TP / P,
-		F1 = 2 * PPV * TPR / (PPV + TPR))
+		F1 = 2 * PPV * TPR / (PPV + TPR),
+		G = sqrt(PPV * TPR))
 ```
 
 # Precision vs recall scatter plot
