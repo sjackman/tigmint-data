@@ -7,12 +7,12 @@ t=64
 gzip=pigz -p$t
 
 # Parameters of ARCS
-c=1
+c=5
 e=30000
-r=0.2
+r=0.05
 
 # Parameters of LINKS
-a=0.999999
+a=0.1
 l=10
 
 # Report run time and memory usage
