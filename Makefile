@@ -6,6 +6,15 @@ t=64
 # gzip compression program
 gzip=pigz -p$t
 
+# Parameters of ARCS
+c=1
+e=30000
+r=0.2
+
+# Parameters of LINKS
+a=0.999999
+l=10
+
 # Report run time and memory usage
 export SHELL=zsh -opipefail
 export REPORTTIME=1
@@ -21,9 +30,9 @@ abyss2:
 		abyss2.abyss-fac.tsv \
 		abyss2.scaftigs.abyss-fac.tsv \
 		abyss2.scaftigs.GRCh38.samtobreak.tsv \
-		abyss2.hg004.c1_e30000_r0.2.arcs.a0.999999_l10.links.abyss-fac.tsv \
-		abyss2.hg004.c1_e30000_r0.2.arcs.a0.999999_l10.links.scaftigs.abyss-fac.tsv \
-		abyss2.hg004.c1_e30000_r0.2.arcs.a0.999999_l10.links.scaftigs.GRCh38.samtobreak.tsv \
+		abyss2.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.abyss-fac.tsv \
+		abyss2.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.abyss-fac.tsv \
+		abyss2.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.GRCh38.samtobreak.tsv \
 		abyss2.hg004.bx.as100.nm5.bam.bai \
 		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.tsv \
 		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.bed.bam.bai \
@@ -33,9 +42,9 @@ abyss2:
 		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.4.breakpoints.tigs.abyss-fac.tsv \
 		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.4.breakpoints.tigs.scaftigs.abyss-fac.tsv \
 		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.4.breakpoints.tigs.scaftigs.GRCh38.samtobreak.tsv \
-		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.4.breakpoints.tigs.hg004.c1_e30000_r0.2.arcs.a0.999999_l10.links.abyss-fac.tsv \
-		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.4.breakpoints.tigs.hg004.c1_e30000_r0.2.arcs.a0.999999_l10.links.scaftigs.abyss-fac.tsv \
-		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.4.breakpoints.tigs.hg004.c1_e30000_r0.2.arcs.a0.999999_l10.links.scaftigs.GRCh38.samtobreak.tsv
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.4.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.abyss-fac.tsv \
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.4.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.abyss-fac.tsv \
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.4.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.GRCh38.samtobreak.tsv
 
 abyss2_bionano_arcs:
 	$(MAKE) draft=$@ \
@@ -51,9 +60,9 @@ abyss2_bionano_arcs:
 		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.4.breakpoints.tigs.abyss-fac.tsv \
 		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.4.breakpoints.tigs.scaftigs.abyss-fac.tsv \
 		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.4.breakpoints.tigs.scaftigs.GRCh38.samtobreak.tsv \
-		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.4.breakpoints.tigs.hg004.c1_e30000_r0.2.arcs.a0.999999_l10.links.abyss-fac.tsv \
-		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.4.breakpoints.tigs.hg004.c1_e30000_r0.2.arcs.a0.999999_l10.links.scaftigs.abyss-fac.tsv \
-		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.4.breakpoints.tigs.hg004.c1_e30000_r0.2.arcs.a0.999999_l10.links.scaftigs.GRCh38.samtobreak.tsv
+		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.4.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.abyss-fac.tsv \
+		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.4.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.abyss-fac.tsv \
+		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.4.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.GRCh38.samtobreak.tsv
 
 supernova:
 	$(MAKE) draft=$@ \
@@ -69,9 +78,9 @@ supernova:
 		supernova.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.4.breakpoints.tigs.abyss-fac.tsv \
 		supernova.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.4.breakpoints.tigs.scaftigs.abyss-fac.tsv \
 		supernova.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.4.breakpoints.tigs.scaftigs.GRCh38.samtobreak.tsv \
-		supernova.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.4.breakpoints.tigs.hg004.c1_e30000_r0.2.arcs.a0.999999_l10.links.abyss-fac.tsv \
-		supernova.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.4.breakpoints.tigs.hg004.c1_e30000_r0.2.arcs.a0.999999_l10.links.scaftigs.abyss-fac.tsv \
-		supernova.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.4.breakpoints.tigs.hg004.c1_e30000_r0.2.arcs.a0.999999_l10.links.scaftigs.GRCh38.samtobreak.tsv
+		supernova.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.4.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.abyss-fac.tsv \
+		supernova.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.4.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.abyss-fac.tsv \
+		supernova.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.4.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.GRCh38.samtobreak.tsv
 
 # Rename the LINKS scaffolds.
 abyss2_bionano_arcs.fa: %.fa: %.orig.fa
@@ -301,9 +310,6 @@ sample=hg004
 # ARCS
 
 # Create a graph of linked contigs using ARCS.
-c=1
-e=30000
-r=0.2
 %.$(sample).c$c_e$e_r$r.arcs_original.gv %.$(sample).c$c_e$e_r$r.arcs.dist.gv %.$(sample).c$c_e$e_r$r.arcs.dist.tsv: %.$(sample).bx.sortn.bam %.fa
 	bin/arcs -s98 -c$c -l0 -z500 -m4-20000 -d0 -e$e -r$r -v \
 		-f $*.fa \
@@ -318,8 +324,6 @@ r=0.2
 	bin/arcs-makeTSVfile $< $@ $*.fa
 
 # Scaffold the assembly using the ARCS graph and LINKS.
-a=0.999999
-l=10
 %.$(sample).c$c_e$e_r$r.arcs.a$a_l$l.links.scaffolds.fa %.$(sample).c$c_e$e_r$r.arcs.a$a_l$l.links.assembly_correspondence.tsv: %.$(sample).c$c_e$e_r$r.arcs.links.tsv %.fa
 	cp $< $*.$(sample).c$c_e$e_r$r.arcs.a$a_l$l.links.tigpair_checkpoint.tsv
 	LINKS -k20 -l$l -t2 -a$a -x1 -s /dev/null -f $*.fa -b $*.$(sample).c$c_e$e_r$r.arcs.a$a_l$l.links
@@ -332,20 +336,20 @@ l=10
 
 abyss2.depth.100.starts.abyss-fac.tsv: \
 		abyss2.abyss-fac.tsv \
-		abyss2.hg004.c1_e30000_r0.2.arcs.a0.999999_l10.links.abyss-fac.tsv \
+		abyss2.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.abyss-fac.tsv \
 		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tigs.abyss-fac.tsv \
-		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tigs.hg004.c1_e30000_r0.2.arcs.a0.999999_l10.links.abyss-fac.tsv \
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.abyss-fac.tsv \
 		abyss2.scaftigs.abyss-fac.tsv \
-		abyss2.hg004.c1_e30000_r0.2.arcs.a0.999999_l10.links.scaftigs.abyss-fac.tsv \
+		abyss2.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.abyss-fac.tsv \
 		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tigs.scaftigs.abyss-fac.tsv \
-		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tigs.hg004.c1_e30000_r0.2.arcs.a0.999999_l10.links.scaftigs.abyss-fac.tsv
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.abyss-fac.tsv
 	mlr --tsvlite cat $^ >$@
 
 abyss2.depth.100.starts.samtobreak.tsv: \
 		abyss2.scaftigs.GRCh38.samtobreak.tsv \
-		abyss2.hg004.c1_e30000_r0.2.arcs.a0.999999_l10.links.scaftigs.GRCh38.samtobreak.tsv \
+		abyss2.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.GRCh38.samtobreak.tsv \
 		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tigs.scaftigs.GRCh38.samtobreak.tsv \
-		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tigs.hg004.c1_e30000_r0.2.arcs.a0.999999_l10.links.scaftigs.GRCh38.samtobreak.tsv
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.GRCh38.samtobreak.tsv
 	mlr --tsvlite cat $^ >$@
 
 # RMarkdown reports
