@@ -297,11 +297,11 @@ sample=hg004
 
 # Calculate assembly contiguity metrics with abyss-fac.
 %.abyss-fac.tsv: %.fa
-	$(abyss_bin)/abyss-fac -G$(GwithN) -t500 $< >$@
+	$(abyss_bin)/abyss-fac -G$(GwithN) -t2000 $< >$@
 
 # Calculate assembly contiguity and correctness metrics with abyss-samtobreak.
 %.samtobreak.txt: %.sam
-	(echo "File: $<"; gunzip -c $< | abyss-samtobreak -G$G -q10 -l1000) >$@
+	(echo "File: $<"; abyss-samtobreak -G$(GwithN) -q50 -l2000 $<) >$@
 
 # Convert samtobreak.txt to TSV using Miller.
 %.samtobreak.tsv: %.samtobreak.txt
