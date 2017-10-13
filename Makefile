@@ -1,7 +1,7 @@
 # Correct misassemblies using Tigmint
 
 # Number of threads
-t=64
+t=16
 
 # gzip compression program
 gzip=pigz -p$t
