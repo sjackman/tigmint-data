@@ -380,5 +380,5 @@ abyss2.depth.100.starts.2-5.samtobreak.tsv: \
 # RMarkdown reports
 
 # Compute precision and recall.
-parameters.html: %.html: %.tsv %.rmd
+precision-recall.html: %.html: %.in.tsv %.rmd
 	Rscript -e 'rmarkdown::render("$*.rmd", "html_document", "$@", params = list(input_tsv="$<", output_tsv="$*.out.tsv"))'

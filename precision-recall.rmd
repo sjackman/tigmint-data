@@ -7,11 +7,11 @@ output:
 params:
   input_tsv:
     label: "Input TSV file of parameters and metrics"
-    value: "parameters.tsv"
+    value: "precision-recall.in.tsv"
     input: text
   output_tsv:
     label: "Output TSV file of precision and recall"
-    value: "parameters.out.tsv"
+    value: "precision-recall.out.tsv"
     input: text
 ---
 
@@ -30,12 +30,12 @@ output_tsv <- params$output_tsv
 # Read the data
 
 ```{r read-data}
-parameters_orig <- read_tsv(input_tsv)
+parameters <- read_tsv(input_tsv)
 ```
 
 # Compute the precision, recall, and F1 score.
 ```{r compute-precision-recall}
-parameters <- parameters_orig %>%
+precision_recall <- parameters %>%
 	mutate(
 		Label = paste("Clipped =", Clipped),
 		TP = P - FN,
@@ -48,7 +48,7 @@ parameters <- parameters_orig %>%
 
 # Precision vs recall scatter plot
 ```{r precision-recall}
-ggplot(parameters) +
+ggplot(precision_recall) +
 	aes(x = TPR, y = PPV, label = Label) +
 	geom_point() +
 	geom_text_repel() +
@@ -60,6 +60,6 @@ ggplot(parameters) +
 
 # Precision vs recall table
 ```{r precision-recall-table}
-parameters %>% select(-Label) %>% write_tsv(output_tsv)
-parameters
+precision_recall %>% select(-Label) %>% write_tsv(output_tsv)
+precision_recall
 ```
