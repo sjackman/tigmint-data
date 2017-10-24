@@ -52,7 +52,8 @@ abyss2_aggregate:
 		abyss2.depth.100.starts.4.abyss-fac.tsv \
 		abyss2.depth.100.starts.4.samtobreak.tsv \
 		abyss2.depth.100.starts.2-5.samtobreak.tsv \
-		abyss2.depth.100.starts.2-5.samtobreak.gscore.tsv
+		abyss2.depth.100.starts.2-5.samtobreak.gscore.tsv \
+		abyss2.depth.100.starts.2-4.arcs.samtobreak.tsv
 
 abyss2_bionano_arcs:
 	$(MAKE) draft=$@ \
@@ -388,6 +389,12 @@ abyss2.depth.100.starts.2-5.samtobreak.tsv: \
 		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.3.breakpoints.tigs.scaftigs.GRCh38.samtobreak.tsv \
 		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.4.breakpoints.tigs.scaftigs.GRCh38.samtobreak.tsv \
 		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.5.breakpoints.tigs.scaftigs.GRCh38.samtobreak.tsv
+	mlr --tsvlite put 'FILENAME =~ "[.]depth[.]([0-9]*)[.]starts[.]([0-9]*)[.]"; $$Depth = "\1"; $$Starts = "\2"' $^ >$@
+
+abyss2.depth.100.starts.2-4.arcs.samtobreak.tsv: \
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.hg004.c5_e30000_r0.05.arcs.a0.1_l10.links.scaftigs.GRCh38.samtobreak.tsv \
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.3.breakpoints.tigs.hg004.c5_e30000_r0.05.arcs.a0.1_l10.links.scaftigs.GRCh38.samtobreak.tsv \
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.4.breakpoints.tigs.hg004.c5_e30000_r0.05.arcs.a0.1_l10.links.scaftigs.GRCh38.samtobreak.tsv
 	mlr --tsvlite put 'FILENAME =~ "[.]depth[.]([0-9]*)[.]starts[.]([0-9]*)[.]"; $$Depth = "\1"; $$Starts = "\2"' $^ >$@
 
 # RMarkdown reports
