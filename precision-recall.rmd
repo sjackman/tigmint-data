@@ -5,12 +5,16 @@ output:
   html_document:
     keep_md: true
 params:
-  input_tsv:
+  breakpoints_count_tsv:
     label: "Input TSV file of parameters and metrics"
-    value: "precision-recall.in.tsv"
+    value: "breakpoints.count.tsv"
+    input: text
+  samtobreak_tsv:
+    label: "Input TSV file of parameters and metrics"
+    value: "samtobreak.tsv"
     input: text
   output_tsv:
-    label: "Output TSV file of precision and recall"
+    label: "Output TSV file of precision, recall, and G-score"
     value: "precision-recall.out.tsv"
     input: text
 ---
@@ -21,23 +25,32 @@ library(ggplot2)
 library(ggrepel)
 library(knitr)
 library(readr)
+library(tidyr)
 
 knit_print.data.frame <- function(x, ...) kable(x) %>% paste(collapse = "\n") %>% asis_output
-input_tsv <- params$input_tsv
+breakpoints_count_tsv <- params$breakpoints_count_tsv
+samtobreak_tsv <- params$samtobreak_tsv
 output_tsv <- params$output_tsv
 ```
 
 # Read the data
 
 ```{r read-data}
-parameters <- read_tsv(input_tsv)
+breakpoints_count <- read_tsv(breakpoints_count_tsv)
+
+samtobreak_orig <- read_tsv(samtobreak_tsv)
+samtobreak <- samtobreak_orig %>% drop_na()
+Positives <- max(samtobreak_orig$Total_breakpoints)
+
+metrics <- left_join(breakpoints_count, samtobreak, by = c("Depth", "Starts")) %>%
+	transmute(Depth, Starts, PP, FN = Total_breakpoints, P = Positives)
 ```
 
 # Compute the precision, recall, and F1 score.
 ```{r compute-precision-recall}
-precision_recall <- parameters %>%
+precision_recall <- metrics %>%
 	mutate(
-		Label = paste("Clipped =", Clipped),
+		Label = paste("Clipped =", Starts),
 		TP = P - FN,
 		FP = PP - TP,
 		PPV = TP / PP,
@@ -52,7 +65,7 @@ ggplot(precision_recall) +
 	aes(x = TPR, y = PPV, label = Label) +
 	geom_point() +
 	geom_text_repel() +
-	scale_x_continuous(name = "Recall (TPR)", limits = c(0, 0.1)) +
+	scale_x_continuous(name = "Recall (TPR)", limits = c(0, 0.15)) +
 	scale_y_continuous(name = "Precision (PPV)", limits = c(0, 1)) +
 	theme_bw(base_size = 20) +
 	theme(panel.border = element_blank())

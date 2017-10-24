@@ -51,7 +51,8 @@ abyss2_aggregate:
 	$(MAKE) draft=abyss2 \
 		abyss2.depth.100.starts.4.abyss-fac.tsv \
 		abyss2.depth.100.starts.4.samtobreak.tsv \
-		abyss2.depth.100.starts.2-5.samtobreak.tsv
+		abyss2.depth.100.starts.2-5.samtobreak.tsv \
+		abyss2.depth.100.starts.2-5.samtobreak.gscore.tsv
 
 abyss2_bionano_arcs:
 	$(MAKE) draft=$@ \
@@ -261,6 +262,10 @@ group_threshold=1000
 		then rename NewGroup_rsum,BreakpointID \
 		$< >$@
 
+# Count the number of breakpoints.
+%.breakpoints.grouped.count.tsv: %.breakpoints.grouped.tsv
+	mlr --tsvlite then stats1 -a max -f BreakpointID then rename BreakpointID_max,PP then put '$$File = FILENAME' $< >$@
+
 # Determine coordinates of the breaktig subsequences.
 %.breakpoints.tigs.bed: %.breakpoints.tsv $(draft).fa.fai
 	Rscript -e 'rmarkdown::render("breaktigs.rmd", "html_notebook", "$*.breakpoints.tigs.nb.html", params = list(input_tsv="$<", input_fai="$(draft).fa.fai", output_bed="$@"))'
@@ -370,15 +375,23 @@ abyss2.depth.100.starts.4.samtobreak.tsv: \
 		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.4.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.GRCh38.samtobreak.tsv
 	mlr --tsvlite cat $^ >$@
 
+abyss2.depth.100.starts.2-5.breakpoints.count.tsv: \
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.grouped.count.tsv \
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.3.breakpoints.grouped.count.tsv \
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.4.breakpoints.grouped.count.tsv \
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.5.breakpoints.grouped.count.tsv
+	mlr --tsvlite put 'FILENAME =~ "[.]depth[.]([0-9]*)[.]starts[.]([0-9]*)[.]"; $$Depth = "\1"; $$Starts = "\2"' $^ >$@
+
 abyss2.depth.100.starts.2-5.samtobreak.tsv: \
+		abyss2.scaftigs.GRCh38.samtobreak.tsv \
 		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.scaftigs.GRCh38.samtobreak.tsv \
 		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.3.breakpoints.tigs.scaftigs.GRCh38.samtobreak.tsv \
 		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.4.breakpoints.tigs.scaftigs.GRCh38.samtobreak.tsv \
 		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.5.breakpoints.tigs.scaftigs.GRCh38.samtobreak.tsv
-	mlr --tsvlite cat $^ >$@
+	mlr --tsvlite put 'FILENAME =~ "[.]depth[.]([0-9]*)[.]starts[.]([0-9]*)[.]"; $$Depth = "\1"; $$Starts = "\2"' $^ >$@
 
 # RMarkdown reports
 
-# Compute precision and recall.
-precision-recall.html: %.html: %.in.tsv %.rmd
-	Rscript -e 'rmarkdown::render("$*.rmd", "html_document", "$@", params = list(input_tsv="$<", output_tsv="$*.out.tsv"))'
+# Compute the precision, recall, and G-score.
+%.samtobreak.gscore.html %.samtobreak.gscore.tsv: %.breakpoints.count.tsv %.samtobreak.tsv
+	Rscript -e 'rmarkdown::render("precision-recall.rmd", "html_document", "$*.samtobreak.gscore.html", params = list(breakpoints_count_tsv="$<", samtobreak_tsv="$*.samtobreak.tsv", output_tsv="$@"))'
