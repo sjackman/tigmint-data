@@ -273,7 +273,8 @@ group_threshold=1000
 
 # Break scaffolds at the breakpoints.
 %.breakpoints.tigs.fa: %.breakpoints.tigs.bed $(draft).fa
-	bedtools getfasta -name -fi $(draft).fa -bed $< | sed 's/::/ /;s/^NN*//;s/NN*$$//' >$@
+	bedtools getfasta -name -fi $(draft).fa -bed $< \
+		| sed 's/::/ /;s/^NN*//;s/NN*$$//;s/^$$/N/' >$@
 
 ################################################################################
 # Calculate assembly contiguity and correctness metrics.
