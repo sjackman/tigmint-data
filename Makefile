@@ -25,7 +25,7 @@ export TIMEFMT=time user=%U system=%S elapsed=%E cpu=%P memory=%M job=%J
 
 all: abyss2 abyss2_bionano_arcs supernova
 
-abyss2:
+abyss2_bam:
 	$(MAKE) draft=$@ \
 		abyss2.abyss-fac.tsv \
 		abyss2.scaftigs.abyss-fac.tsv \
@@ -71,7 +71,7 @@ abyss2_bionano_arcs:
 		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.abyss-fac.tsv \
 		abyss2_bionano_arcs.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.GRCh38.samtobreak.tsv
 
-supernova:
+supernova_bam:
 	$(MAKE) draft=$@ \
 		supernova.abyss-fac.tsv \
 		supernova.scaftigs.abyss-fac.tsv \
@@ -88,6 +88,38 @@ supernova:
 		supernova.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.abyss-fac.tsv \
 		supernova.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.abyss-fac.tsv \
 		supernova.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.GRCh38.samtobreak.tsv
+
+abyss2 discovardenovo sga soapdenovo supernova:
+	$(MAKE) draft=$@ \
+		$@.abyss-fac.tsv \
+		$@.scaftigs.GRCh38.samtobreak.tsv \
+		$@.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.bed.genomecov.stats.tsv \
+		$@.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.abyss-fac.tsv \
+		$@.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.scaftigs.GRCh38.samtobreak.tsv \
+		$@.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.abyss-fac.tsv \
+		$@.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.GRCh38.samtobreak.tsv \
+		$@.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.abyss-fac.tsv \
+		$@.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.GRCh38.samtobreak.tsv
+
+assemblies: abyss2 discovardenovo sga soapdenovo supernova
+
+# Download assemblies from NCBI GIAB.
+
+# ABySS 2.0
+abyss2.fa:
+	curl -o$@ ftp://ftp-trace.ncbi.nlm.nih.gov/giab/ftp/data/AshkenazimTrio/analysis/BCGSC_HG004_ABySS2.0_assemblies_12082016/abyss-2.0/scaffolds.fa
+
+# DISCOVARdenovo
+discovardenovo.fa:
+	curl -o$@ ftp://ftp-trace.ncbi.nlm.nih.gov/giab/ftp/data/AshkenazimTrio/analysis/BCGSC_HG004_ABySS2.0_assemblies_12082016/discovar/contigs.fa
+
+# SGA
+sga.fa:
+	curl -o$@ ftp://ftp-trace.ncbi.nlm.nih.gov/giab/ftp/data/AshkenazimTrio/analysis/BCGSC_HG004_ABySS2.0_assemblies_12082016/sga/contigs.fa
+
+# SOAPdenovo
+soapdenovo.fa:
+	curl -o$@ ftp://ftp-trace.ncbi.nlm.nih.gov/giab/ftp/data/AshkenazimTrio/analysis/BCGSC_HG004_ABySS2.0_assemblies_12082016/soapdenovo/scaffolds.fa
 
 # Rename the LINKS scaffolds.
 abyss2_bionano_arcs.fa: %.fa: %.orig.fa
