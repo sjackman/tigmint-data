@@ -1,0 +1,31 @@
+---
+title: "Combine jupiter plots into a single figure"
+author: "Shaun Jackman"
+output:
+  html_document:
+    keep_md: yes
+---
+
+```{r setup, message=FALSE}
+library(cowplot)
+library(png)
+library(ggplot2)
+library(grid)
+```
+
+```{r read-images}
+jupiter_abyss <- readPNG("images/jupiter_abyss.png")
+jupiter_abyss_depth2 <- readPNG("images/jupiter_abyss_starts2.png")
+```
+
+```{r jupiter, fig.height=3, fig.width=6}
+plot_jupiter_abyss <- ggplot() +
+	annotation_custom(rasterGrob(jupiter_abyss)) +
+	xlab("Before Tigmint")
+
+plot_jupiter_abyss_depth2 <- ggplot() +
+	annotation_custom(rasterGrob(jupiter_abyss_depth2)) +
+	xlab("After Tigmint")
+
+plot_grid(plot_jupiter_abyss, plot_jupiter_abyss_depth2)
+```
