@@ -1,0 +1,74 @@
+---
+title: Determine sensitivity to parameters of Tigmint
+author: Shaun Jackman
+output:
+  html_document:
+    keep_md: true
+params:
+  abyss_fac_tsv:
+    label: "Input TSV file of parameters and abyss-fac metrics"
+    value: "abyss-fac.tsv"
+    input: text
+  samtobreak_tsv:
+    label: "Input TSV file of parameters and abyss-samtobreak metrics"
+    value: "samtobreak.tsv"
+    input: text
+  output_tsv:
+    label: "Output TSV file of parameters and assembly metrics"
+    value: "parameters.out.tsv"
+    input: text
+---
+
+```{r setup, message=FALSE}
+library(dplyr)
+library(ggplot2)
+library(ggrepel)
+library(knitr)
+library(readr)
+library(scales)
+library(tidyr)
+
+knit_print.data.frame <- function(x, ...) kable(x) %>% paste(collapse = "\n") %>% asis_output
+abyss_fac_tsv <- params$abyss_fac_tsv
+samtobreak_tsv <- params$samtobreak_tsv
+output_tsv <- params$output_tsv
+```
+
+# Read the data
+
+```{r read-data}
+abyss_fac <- read_tsv(abyss_fac_tsv)
+samtobreak <- read_tsv(samtobreak_tsv)
+
+metrics <- left_join(abyss_fac, samtobreak, by = c("Depth", "Starts")) %>%
+	mutate(Label = ifelse(is.na(Depth), "Original",
+		paste0("d=", Depth, " s=", Starts)))
+```
+
+# Plot parameters and assembly metrics
+```{r parameters}
+ggplot(metrics) +
+	aes(x = Total_breakpoints, y = Scaffold_NGA50, label = Label) +
+	geom_point() +
+	geom_text_repel(nudge_x = 20, nudge_y = 100e3) +
+	scale_x_continuous(name = "Breakpoints", labels = comma) +
+	scale_y_continuous(name = "Scaffold NGA50 (Mbp)", labels = unit_format(unit = "Mbp", scale = 1e-6)) +
+	coord_cartesian(y = c(5e6, 10e6)) +
+	theme_minimal(base_size = 20)
+```
+
+# Table of parameters and assembly metrics
+```{r parameters-table}
+parameters_table <- metrics %>%
+	arrange(Scaffold_NGA50) %>%
+	replace_na(list(Depth = "Original", Starts = "Original")) %>%
+	transmute(
+		Depth,
+		Starts,
+		`NG50 (Mbp)` = round(NG50 / 1e6, 2),
+		`NGA50 (Mbp)` = round(Scaffold_NGA50 / 1e6, 2),
+		Breakpoints = Total_breakpoints,
+		Reduction = max(Total_breakpoints) - Breakpoints)
+parameters_table
+write_tsv(parameters_table, output_tsv)
+```
