@@ -23,7 +23,7 @@ export TIMEFMT=time user=%U system=%S elapsed=%E cpu=%P memory=%M job=%J
 .DELETE_ON_ERROR:
 .SECONDARY:
 
-all: abyss2 abyss2_bionano_arcs supernova
+all: reports tables
 
 abyss2_bam:
 	$(MAKE) draft=$@ \
@@ -49,9 +49,9 @@ abyss2_bam:
 # Aggregate the results.
 abyss2_aggregate:
 	$(MAKE) draft=abyss2 \
-		abyss2.depth.100.starts.1-5.samtobreak.tsv \
 		abyss2.depth.100.starts.1-5.samtobreak.gscore.tsv \
-		abyss2.depth.100.starts.1-4.arcs.samtobreak.tsv
+		abyss2.depth.80-120.starts.2-4.arcs.abyss-fac.tsv \
+		abyss2.depth.80-120.starts.2-4.arcs.samtobreak.tsv
 
 abyss2_bionano_arcs:
 	$(MAKE) draft=$@ \
@@ -102,6 +102,12 @@ abyss2 discovardenovo sga soapdenovo supernova:
 		$@.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.GRCh38.samtobreak.tsv
 
 assemblies: abyss2 discovardenovo sga soapdenovo supernova
+
+reports: \
+	abyss2.depth.80-120.starts.2-4.arcs.parameters.html
+
+tables: \
+	abyss2.depth.80-120.starts.2-4.arcs.parameters.tsv.md
 
 # Download assemblies from NCBI GIAB.
 
@@ -425,7 +431,21 @@ abyss2.depth.100.starts.1-5.samtobreak.tsv: \
 		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.5.breakpoints.tigs.scaftigs.GRCh38.samtobreak.tsv
 	mlr --tsvlite put 'FILENAME =~ "[.]depth[.]([0-9]*)[.]starts[.]([0-9]*)[.]"; $$Depth = "\1"; $$Starts = "\2"' $^ >$@
 
-abyss2.depth.100.starts.1-4.arcs.samtobreak.tsv: \
+abyss2.depth.80-120.starts.2-4.arcs.abyss-fac.tsv: \
+		abyss2.hg004.c5_e30000_r0.05.arcs.a0.1_l10.links.abyss-fac.tsv \
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.80.starts.2.breakpoints.tigs.hg004.c5_e30000_r0.05.arcs.a0.1_l10.links.abyss-fac.tsv \
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.hg004.c5_e30000_r0.05.arcs.a0.1_l10.links.abyss-fac.tsv \
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.120.starts.2.breakpoints.tigs.hg004.c5_e30000_r0.05.arcs.a0.1_l10.links.abyss-fac.tsv \
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.hg004.c5_e30000_r0.05.arcs.a0.1_l10.links.abyss-fac.tsv \
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.3.breakpoints.tigs.hg004.c5_e30000_r0.05.arcs.a0.1_l10.links.abyss-fac.tsv \
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.4.breakpoints.tigs.hg004.c5_e30000_r0.05.arcs.a0.1_l10.links.abyss-fac.tsv
+	mlr --tsvlite put 'FILENAME =~ "[.]depth[.]([0-9]*)[.]starts[.]([0-9]*)[.]"; $$Depth = "\1"; $$Starts = "\2"' $^ >$@
+
+abyss2.depth.80-120.starts.2-4.arcs.samtobreak.tsv: \
+		abyss2.hg004.c5_e30000_r0.05.arcs.a0.1_l10.links.scaftigs.GRCh38.samtobreak.tsv \
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.80.starts.2.breakpoints.tigs.hg004.c5_e30000_r0.05.arcs.a0.1_l10.links.scaftigs.GRCh38.samtobreak.tsv \
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.hg004.c5_e30000_r0.05.arcs.a0.1_l10.links.scaftigs.GRCh38.samtobreak.tsv \
+		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.120.starts.2.breakpoints.tigs.hg004.c5_e30000_r0.05.arcs.a0.1_l10.links.scaftigs.GRCh38.samtobreak.tsv \
 		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.hg004.c5_e30000_r0.05.arcs.a0.1_l10.links.scaftigs.GRCh38.samtobreak.tsv \
 		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.3.breakpoints.tigs.hg004.c5_e30000_r0.05.arcs.a0.1_l10.links.scaftigs.GRCh38.samtobreak.tsv \
 		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.4.breakpoints.tigs.hg004.c5_e30000_r0.05.arcs.a0.1_l10.links.scaftigs.GRCh38.samtobreak.tsv
@@ -435,4 +455,12 @@ abyss2.depth.100.starts.1-4.arcs.samtobreak.tsv: \
 
 # Compute the precision, recall, and G-score.
 %.samtobreak.gscore.html %.samtobreak.gscore.tsv: %.breakpoints.count.tsv %.samtobreak.tsv
-	Rscript -e 'rmarkdown::render("precision-recall.rmd", "html_document", "$*.samtobreak.gscore.html", params = list(breakpoints_count_tsv="$<", samtobreak_tsv="$*.samtobreak.tsv", output_tsv="$@"))'
+	Rscript -e 'rmarkdown::render("precision-recall.rmd", "html_document", "$*.samtobreak.gscore.html", params = list(breakpoints_count_tsv="$<", samtobreak_tsv="$*.samtobreak.tsv", output_tsv="$*.samtobreak.gscore.tsv"))'
+
+# Compute the assembly metrics for parameter sensitivty.
+%.parameters.html %.parameters.tsv: %.abyss-fac.tsv %.samtobreak.tsv
+	Rscript -e 'rmarkdown::render("parameters.rmd", "html_document", "$*.parameters.html", params = list(abyss_fac_tsv="$<", samtobreak_tsv="$*.samtobreak.tsv", output_tsv="$*.parameters.tsv"))'
+
+# Convert TSV to Markdown with Miller.
+%.tsv.md: %.tsv
+	mlr --itsvlite --omd cat $< >$@
