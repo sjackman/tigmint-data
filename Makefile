@@ -104,9 +104,11 @@ abyss2 discovardenovo sga soapdenovo supernova:
 assemblies: abyss2 discovardenovo sga soapdenovo supernova
 
 reports: \
+	abyss2.depth.100.starts.2.metrics.html \
 	abyss2.depth.80-120.starts.2-4.arcs.parameters.html
 
 tables: \
+	abyss2.depth.100.starts.2.metrics.tsv.md \
 	abyss2.depth.80-120.starts.2-4.arcs.parameters.tsv.md
 
 # Download assemblies from NCBI GIAB.
@@ -452,6 +454,10 @@ abyss2.depth.80-120.starts.2-4.arcs.samtobreak.tsv: \
 	mlr --tsvlite put 'FILENAME =~ "[.]depth[.]([0-9]*)[.]starts[.]([0-9]*)[.]"; $$Depth = "\1"; $$Starts = "\2"' $^ >$@
 
 # RMarkdown reports
+
+# Compute the assembly metrics for a set of assemblies.
+%.metrics.html %.metrics.tsv: %.abyss-fac.tsv %.samtobreak.tsv
+	Rscript -e 'rmarkdown::render("metrics.rmd", "html_document", "$*.metrics.html", params = list(abyss_fac_tsv="$<", samtobreak_tsv="$*.samtobreak.tsv", output_tsv="$*.metrics.tsv"))'
 
 # Compute the precision, recall, and G-score.
 %.samtobreak.gscore.html %.samtobreak.gscore.tsv: %.breakpoints.count.tsv %.samtobreak.tsv
