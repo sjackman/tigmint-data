@@ -16,6 +16,7 @@ a=0.1
 l=10
 
 # Report run time and memory usage
+time=env time -v -o $@.time
 export SHELL=zsh -opipefail
 export REPORTTIME=1
 export TIMEFMT=time user=%U system=%S elapsed=%E cpu=%P memory=%M job=%J
@@ -111,6 +112,13 @@ tables: \
 	abyss2.depth.100.starts.2.metrics.tsv.md \
 	abyss2.depth.80-120.starts.2-4.arcs.parameters.tsv.md
 
+nxrepair: \
+	abyss2.hg004.nxrepair.fa \
+	abyss2.hg004.nxrepair.abyss-fac.tsv \
+	abyss2.hg004.nxrepair.scaftigs.GRCh38.samtobreak.tsv \
+	abyss2.hg004.nxrepair.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.abyss-fac.tsv \
+	abyss2.hg004.nxrepair.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.GRCh38.samtobreak.tsv
+
 # Download assemblies from NCBI GIAB.
 
 # ABySS 2.0
@@ -148,7 +156,11 @@ abyss2_bionano_arcs.fa: %.fa: %.orig.fa
 %.fa.bwt: %.fa
 	bwa index $<
 
-# Align paired-end reads to the draft genome and sort.
+# Align mate-pair reads to the draft genome and sort.
+$(draft).%.mp.sort.bam: %.mp.fq.gz $(draft).fa.bwt
+	bwa mem -t$t -p $(draft).fa $< | samtools sort -@$t -o $@
+
+# Align linked reads to the draft genome and sort.
 $(draft).%.bam: %.fq.gz $(draft).fa.bwt
 	bwa mem -t$t -pC $(draft).fa $< | samtools view -h -F4 | samtools sort -@$t -o $@
 
@@ -452,6 +464,16 @@ abyss2.depth.80-120.starts.2-4.arcs.samtobreak.tsv: \
 		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.3.breakpoints.tigs.hg004.c5_e30000_r0.05.arcs.a0.1_l10.links.scaftigs.GRCh38.samtobreak.tsv \
 		abyss2.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.4.breakpoints.tigs.hg004.c5_e30000_r0.05.arcs.a0.1_l10.links.scaftigs.GRCh38.samtobreak.tsv
 	mlr --tsvlite put 'FILENAME =~ "[.]depth[.]([0-9]*)[.]starts[.]([0-9]*)[.]"; $$Depth = "\1"; $$Starts = "\2"' $^ >$@
+
+# NxRepair
+
+# Concatenate the mate-pair data.
+hg004.mp.fq.gz: MPHG004-23100079.mp.fq.gz MPHG004-23110109.mp.fq.gz
+	cat $^ >$@
+
+# Correct assembly errors with NxRepair.
+%.hg004.nxrepair.fa: %.hg004.mp.sort.bam %.fa %.hg004.mp.sort.bam.bai
+	$(time) nxrepair $< $*.fa $*.nxrepair $@
 
 # RMarkdown reports
 
