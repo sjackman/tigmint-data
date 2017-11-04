@@ -18,7 +18,7 @@ jupiter_abyss <- readPNG("images/jupiter_abyss.png")
 jupiter_abyss_depth2 <- readPNG("images/jupiter_abyss_starts2.png")
 ```
 
-```{r jupiter, fig.height=3, fig.width=6}
+```{r jupiter, fig.height=3, fig.width=6, dpi=300}
 plot_jupiter_abyss <- ggplot() +
 	annotation_custom(rasterGrob(jupiter_abyss)) +
 	xlab("Before Tigmint")
