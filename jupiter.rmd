@@ -8,14 +8,14 @@ output:
 
 ```{r setup, message=FALSE}
 library(cowplot)
-library(png)
+library(rsvg)
 library(ggplot2)
 library(grid)
 ```
 
 ```{r read-images}
-jupiter_abyss <- readPNG("images/jupiter_abyss.png")
-jupiter_abyss_depth2 <- readPNG("images/jupiter_abyss_starts2.png")
+jupiter_abyss <- rsvg("images/jupiter_abyss.svg")
+jupiter_abyss_depth2 <- rsvg("images/jupiter_abyss_starts2.svg")
 ```
 
 ```{r jupiter, fig.height=3, fig.width=6, dpi=300}
