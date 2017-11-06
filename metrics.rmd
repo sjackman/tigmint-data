@@ -53,14 +53,26 @@ samtobreak <- read_tsv(samtobreak_tsv) %>%
 metrics <- left_join(abyss_fac, samtobreak, by = "Assembly")
 ```
 
-# Plot assembly metrics
-```{r metrics}
+# Plot NGA50 and breakpoints
+```{r nga50-breakpoints}
 ggplot(metrics) +
 	aes(x = Total_breakpoints, y = Scaffold_NGA50, label = Assembly) +
 	geom_point() +
 	geom_text_repel(nudge_y = -100e3) +
 	scale_x_continuous(name = "Breakpoints", labels = comma) +
 	scale_y_continuous(name = "Scaffold NGA50 (Mbp)", labels = unit_format(unit = "Mbp", scale = 1e-6)) +
+	expand_limits(x = c(2400, 2800), y = c(0, 10e6)) +
+	theme_minimal(base_size = 20)
+```
+
+# Plot NG50, NGA50, and breakpoints
+```{r nga50-ng50-breakpoints}
+ggplot(metrics) +
+	aes(x = Total_breakpoints, y = Scaffold_NGA50, label = Assembly) +
+	geom_errorbar(aes(ymin = Scaffold_NGA50, ymax = NG50), width = 5) +
+	geom_text_repel(nudge_y = -100e3) +
+	scale_x_continuous(name = "Breakpoints", labels = comma) +
+	scale_y_continuous(name = "Scaffold NG50 and NGA50 (Mbp)", labels = unit_format(unit = "Mbp", scale = 1e-6)) +
 	expand_limits(x = c(2400, 2800), y = c(0, 10e6)) +
 	theme_minimal(base_size = 20)
 ```
