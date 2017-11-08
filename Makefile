@@ -141,6 +141,14 @@ soapdenovo.fa:
 abyss2_bionano_arcs.fa: %.fa: %.orig.fa
 	gsed 's/scaffold//;s/,[^\t]*//' $< >$@
 
+# Supernova
+
+# Assemble the linked reads with Supernova
+NA24143-giab/outs/summary.csv:
+	supernova run --id=NA24143-giab --fastqs=/projects/btl/datasets/hsapiens/giab/HG004/10XGenomics/NA24143-chromium-raw --localcores=64 --localmem=500
+
+# Barcodes
+
 # Add the barcode to the read ID, and skip reads without barcodes.
 %.bx.fq.gz: %.longranger.basic.fq.gz
 	gunzip -c $< | gawk ' \
