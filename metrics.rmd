@@ -38,16 +38,26 @@ output_tsv <- params$output_tsv
 # Read the data
 
 ```{r read-data}
+assemblers <- c("abyss", "supernova")
 assembly_names <- c(
 	"ABySS",
 	"ABySS + Tigmint",
 	"ABySS + ARCS",
-	"ABySS + Tigmint + ARCS")
+	"ABySS + Tigmint + ARCS",
+	"Supernova",
+	"Supernova + Tigmint",
+	"Supernova + ARCS",
+	"Supernova + Tigmint + ARCS")
 
-abyss_fac <- read_tsv(abyss_fac_tsv) %>%
-	filter(!grepl("scaftigs", name)) %>%
+abyss_fac_orig <- read_tsv(abyss_fac_tsv)
+samtobreak_orig <- read_tsv(samtobreak_tsv)
+
+assemblers_regex <- paste0(assemblers, collapse = "|")
+abyss_fac <- abyss_fac_orig %>%
+	filter(grepl(assemblers_regex, name), !grepl("scaftigs", name)) %>%
 	add_column(Assembly = assembly_names)
-samtobreak <- read_tsv(samtobreak_tsv) %>%
+samtobreak <- samtobreak_orig %>%
+	filter(grepl(assemblers_regex, File)) %>%
 	add_column(Assembly = assembly_names)
 
 metrics <- left_join(abyss_fac, samtobreak, by = "Assembly")
@@ -58,35 +68,35 @@ metrics <- left_join(abyss_fac, samtobreak, by = "Assembly")
 ggplot(metrics) +
 	aes(x = Total_breakpoints, y = Scaffold_NGA50, label = Assembly) +
 	geom_point() +
-	geom_text_repel(nudge_y = -100e3) +
+	geom_text_repel(segment.alpha = 0.5) +
 	scale_x_continuous(name = "Breakpoints", labels = comma) +
-	scale_y_continuous(name = "Scaffold NGA50 (Mbp)", labels = unit_format(unit = "Mbp", scale = 1e-6)) +
-	expand_limits(x = c(2400, 2800), y = c(0, 10e6)) +
+	scale_y_continuous(name = "Scaffold NGA50", labels = unit_format(unit = "Mbp", scale = 1e-6)) +
+	expand_limits(x = c(2000, 4000), y = c(0, 10e6)) +
 	theme_minimal(base_size = 20)
 ```
 
 # Plot NG50, NGA50, and breakpoints
 ```{r nga50-ng50-breakpoints}
 ggplot(metrics) +
-	aes(x = Total_breakpoints, y = Scaffold_NGA50, label = Assembly) +
-	geom_errorbar(aes(ymin = Scaffold_NGA50, ymax = NG50), width = 5) +
-	geom_text_repel(nudge_y = -100e3) +
+	aes(x = Total_breakpoints, y = NG50, label = Assembly) +
+	geom_errorbar(aes(ymin = Scaffold_NGA50, ymax = NG50), width = 50) +
+	geom_text_repel(nudge_x = -250, nudge_y = 500e3, segment.alpha = 0.5) +
 	scale_x_continuous(name = "Breakpoints", labels = comma) +
-	scale_y_continuous(name = "Scaffold NG50 and NGA50 (Mbp)", labels = unit_format(unit = "Mbp", scale = 1e-6)) +
-	expand_limits(x = c(2400, 2800), y = c(0, 10e6)) +
+	scale_y_continuous(name = "Scaffold NGA50-NG50", labels = unit_format(unit = "Mbp", scale = 1e-6)) +
+	expand_limits(x = c(2000, 4000), y = c(0, 25e6)) +
 	theme_minimal(base_size = 20)
 ```
 
 # Table of assembly metrics
 ```{r metrics-table}
-parameters_table <- metrics %>%
-	arrange(Scaffold_NGA50) %>%
+metrics_table <- metrics %>%
 	transmute(
 		Assembly,
 		`NG50 (Mbp)` = round(NG50 / 1e6, 2),
 		`NGA50 (Mbp)` = round(Scaffold_NGA50 / 1e6, 2),
-		Breakpoints = Total_breakpoints,
-		Reduction = Total_breakpoints[1] - Breakpoints)
-parameters_table
-write_tsv(parameters_table, output_tsv)
+		Breakpoints = comma(Total_breakpoints),
+		Reduction = lag(Total_breakpoints) - Total_breakpoints,
+		Reduction = ifelse(Reduction >= 0, Reduction, NA))
+metrics_table
+write_tsv(metrics_table, output_tsv)
 ```
