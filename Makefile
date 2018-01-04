@@ -373,7 +373,7 @@ sample=hg004
 
 # Calculate assembly contiguity and correctness metrics with abyss-samtobreak.
 %.samtobreak.txt: %.sam
-	(echo "File: $<"; abyss-samtobreak -G$(GwithN) -q10 -l500 $<) >$@
+	(echo "File: $<"; abyss-samtobreak --text -G$(GwithN) -q10 -l500 $<) >$@
 
 # Convert samtobreak.txt to TSV using Miller.
 %.samtobreak.tsv: %.samtobreak.txt
@@ -381,10 +381,10 @@ sample=hg004
 		then rename 'Number of unmapped contigs,Unmapped_contigs' \
 		then rename 'Total length of unmapped contigs,Unmapped_bases' \
 		then rename 'Mapped contig bases,Mapped_bases' \
-		then rename 'Mapped NG50,Contig_NGA50' \
+		then rename 'Contig NGA50,Contig_NGA50' \
 		then rename 'Number of Q10 break points longer than 500 bp,Contig_breakpoints' \
 		then rename 'Scaffold NG50,Scaffold_NG50' \
-		then rename 'Aligned scaffold NG50,Scaffold_NGA50' \
+		then rename 'Scaffold NGA50,Scaffold_NGA50' \
 		then rename 'Number of Q10 scaffold breakpoints longer than 500 bp,Scaffold_breakpoints' \
 		then cut -r -x -f ' ' \
 		then put '$$Total_breakpoints = $$Contig_breakpoints + $$Scaffold_breakpoints' \
