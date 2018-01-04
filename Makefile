@@ -105,12 +105,12 @@ abyss2 discovardenovo sga soapdenovo supernova:
 assemblies: abyss2 discovardenovo sga soapdenovo supernova
 
 reports: \
-	abyss2.depth.100.starts.2.metrics.html \
-	abyss2.depth.80-120.starts.2-4.arcs.parameters.html
+	abyss2.depth.80-120.starts.2-4.arcs.parameters.html \
+	assemblies.depth.100.starts.2.metrics.html
 
 tables: \
-	abyss2.depth.100.starts.2.metrics.tsv.md \
-	abyss2.depth.80-120.starts.2-4.arcs.parameters.tsv.md
+	abyss2.depth.80-120.starts.2-4.arcs.parameters.tsv.md \
+	assemblies.depth.100.starts.2.metrics.tsv.md
 
 nxrepair: \
 	abyss2.hg004.nxrepair.fa \
