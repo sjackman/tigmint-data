@@ -90,7 +90,7 @@ supernova_bam:
 		supernova.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.abyss-fac.tsv \
 		supernova.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.GRCh38.samtobreak.tsv
 
-abyss2 discovardenovo sga soapdenovo supernova:
+abyss2 discovardenovo discovardenovo-besst sga soapdenovo supernova:
 	$(MAKE) draft=$@ \
 		$@.abyss-fac.tsv \
 		$@.scaftigs.GRCh38.samtobreak.tsv \
@@ -102,7 +102,7 @@ abyss2 discovardenovo sga soapdenovo supernova:
 		$@.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.abyss-fac.tsv \
 		$@.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.GRCh38.samtobreak.tsv
 
-assemblies: abyss2 discovardenovo sga soapdenovo supernova
+assemblies: abyss2 discovardenovo discovardenovo-besst sga soapdenovo supernova
 
 reports: \
 	abyss2.depth.80-120.starts.2-4.arcs.parameters.html \
@@ -128,6 +128,10 @@ abyss2.fa:
 # DISCOVARdenovo
 discovardenovo.fa:
 	curl -o $@ ftp://ftp-trace.ncbi.nlm.nih.gov/giab/ftp/data/AshkenazimTrio/analysis/BCGSC_HG004_ABySS2.0_assemblies_12082016/discovar/contigs.fa
+
+# DISCOVARdenovo + BESST
+discovardenovo-besst.fa:
+	curl -o $@ ftp://ftp-trace.ncbi.nlm.nih.gov/giab/ftp/data/AshkenazimTrio/analysis/BCGSC_HG004_ABySS2.0_assemblies_12082016/discovar/besst-scaffolds.fa
 
 # SGA
 sga.fa:
@@ -478,14 +482,13 @@ abyss2.depth.80-120.starts.2-4.arcs.samtobreak.tsv: \
 
 assemblies.depth.100.starts.2.abyss-fac.tsv: \
 		abyss2.depth.100.starts.2.abyss-fac.tsv \
-		discovardenovo.depth.100.starts.2.abyss-fac.tsv \
-		soapdenovo.depth.100.starts.2.abyss-fac.tsv \
+		discovardenovo-besst.depth.100.starts.2.abyss-fac.tsv \
 		supernova.depth.100.starts.2.abyss-fac.tsv
 	mlr --tsvlite cat $^ >$@
 
 assemblies.depth.100.starts.2.samtobreak.tsv: \
 		abyss2.depth.100.starts.2.samtobreak.tsv \
-		discovardenovo.depth.100.starts.2.samtobreak.tsv \
+		discovardenovo-besst.depth.100.starts.2.samtobreak.tsv \
 		soapdenovo.depth.100.starts.2.samtobreak.tsv \
 		supernova.depth.100.starts.2.samtobreak.tsv
 	mlr --tsvlite cat $^ >$@
