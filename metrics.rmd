@@ -34,20 +34,22 @@ abyss_fac_tsv <- params$abyss_fac_tsv
 samtobreak_tsv <- params$samtobreak_tsv
 output_tsv <- params$output_tsv
 
-abyss_fac_tsv
-samtobreak_tsv
-output_tsv
+c(abyss_fac_tsv, samtobreak_tsv, output_tsv)
 ```
 
 # Read the data
 
 ```{r read-data}
-assemblers <- c("abyss", "supernova")
+assemblers <- c("abyss", "discovardenovo-besst", "supernova")
 assembly_names <- c(
 	"ABySS",
 	"ABySS + Tigmint",
 	"ABySS + ARCS",
 	"ABySS + Tigmint + ARCS",
+	"DISCOVAR",
+	"DISCOVAR + Tigmint",
+	"DISCOVAR + ARCS",
+	"DISCOVAR + Tigmint + ARCS",
 	"Supernova",
 	"Supernova + Tigmint",
 	"Supernova + ARCS",
@@ -64,7 +66,8 @@ samtobreak <- samtobreak_orig %>%
 	filter(grepl(assemblers_regex, File)) %>%
 	add_column(Assembly = assembly_names)
 
-metrics <- left_join(abyss_fac, samtobreak, by = "Assembly")
+metrics <- left_join(abyss_fac, samtobreak, by = "Assembly") %>%
+	separate(Assembly, "Assembler", extra = "drop", remove = FALSE)
 ```
 
 # Plot NGA50 and breakpoints
@@ -72,9 +75,10 @@ metrics <- left_join(abyss_fac, samtobreak, by = "Assembly")
 ggplot(metrics) +
 	aes(x = Total_breakpoints, y = Scaffold_NGA50, label = Assembly) +
 	geom_point() +
-	geom_text_repel(segment.alpha = 0.5) +
+	geom_text_repel(aes(colour = Assembler), segment.alpha = 0.5) +
 	scale_x_continuous(name = "Breakpoints", labels = comma) +
 	scale_y_continuous(name = "Scaffold NGA50", labels = unit_format(unit = "Mbp", scale = 1e-6)) +
+	scale_colour_brewer(palette = "Dark2", guide = FALSE) +
 	expand_limits(x = c(4000, 8000), y = c(0, 10e6)) +
 	theme_minimal(base_size = 20)
 ```
