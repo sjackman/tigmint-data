@@ -107,6 +107,8 @@ abyss2 discovardenovo discovardenovo-besst sga soapdenovo supernova:
 
 assemblies: abyss2 discovardenovo discovardenovo-besst sga soapdenovo supernova
 
+quast: assemblies.quast.tsv
+
 reports: \
 	abyss2.depth.80-120.starts.2-4.arcs.parameters.html \
 	assemblies.depth.100.starts.2.metrics.html
@@ -425,6 +427,16 @@ sample=hg004
 # Aggregate the results.
 s=$(starts_threshold)
 
+# Symlink the assemblies.
+%.tigmint.arcs.fa: %.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.$s.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.fa
+	ln -sf $< $@
+
+%.tigmint.fa: %.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.$s.breakpoints.tigs.fa
+	ln -sf $< $@
+
+%.arcs.fa: %.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.fa
+	ln -sf $< $@
+
 %.depth.100.starts.$s.abyss-fac.tsv: \
 		%.abyss-fac.tsv \
 		%.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.$s.breakpoints.tigs.abyss-fac.tsv \
@@ -506,11 +518,29 @@ hg004.mp.fq.gz: MPHG004-23100079.mp.fq.gz MPHG004-23110109.mp.fq.gz
 %.hg004.nxrepair.fa: %.hg004.mp.sort.bam %.fa %.hg004.mp.sort.bam.bai
 	$(time) nxrepair $< $*.fa $*.nxrepair $@
 
+# QUAST
+
+# Calculate assembly contiguity and correctness metrics using QUAST.
+%.quast/transposed_report.tsv: %.fa %.tigmint.fa %.arcs.fa %.tigmint.arcs.fa
+	~/.linuxbrew/bin/quast.py -t$t -se --fast --large --min-identity 90 --scaffold-gap-max-size 1000000 -R $(ref_fa) -o $(@D) $^
+
+# Symlink the QUAST results.
+%.quast.tsv: %.quast/transposed_report.tsv
+	ln -sf $< $@
+
+# Aggregate the QUAST results.
+assemblies.quast.tsv: abyss2.quast.tsv discovardenovo-besst.quast.tsv supernova.quast.tsv
+	mlr --tsvlite cat $^ >$@
+
 # RMarkdown reports
 
 # Compute the assembly metrics for a set of assemblies.
 %.metrics.html %.metrics.tsv: %.abyss-fac.tsv %.samtobreak.tsv
 	Rscript -e 'rmarkdown::render("metrics.rmd", "html_document", "$*.metrics.html", params = list(abyss_fac_tsv="$<", samtobreak_tsv="$*.samtobreak.tsv", output_tsv="$*.metrics.tsv"))'
+
+# Compute the assembly metrics for a set of assemblies.
+%.quast.nb.html %.quast.out.tsv: %.quast.tsv
+	Rscript -e 'rmarkdown::render("quast.rmd", "html_notebook", "$*.quast.html", params = list(input_tsv="$<", output_tsv="$*.quast.out.tsv"))'
 
 # Compute the precision, recall, and G-score.
 %.samtobreak.gscore.html %.samtobreak.gscore.tsv: %.breakpoints.count.tsv %.samtobreak.tsv
