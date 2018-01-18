@@ -3,6 +3,9 @@
 # Number of threads
 t=16
 
+# Options for biomake
+QsubArgs=-c$t
+
 # gzip compression program
 gzip=pigz -p$t
 
@@ -17,7 +20,7 @@ l=10
 
 # Report run time and memory usage
 time=env time -v -o $@.time
-export SHELL=zsh -opipefail
+export SHELL=zsh -e -o pipefail
 export REPORTTIME=1
 export TIMEFMT=time user=%U system=%S elapsed=%E cpu=%P memory=%M job=%J
 
@@ -142,7 +145,7 @@ soapdenovo.fa:
 	curl -o $@ ftp://ftp-trace.ncbi.nlm.nih.gov/giab/ftp/data/AshkenazimTrio/analysis/BCGSC_HG004_ABySS2.0_assemblies_12082016/soapdenovo/scaffolds.fa
 
 # Rename the LINKS scaffolds.
-abyss2_bionano_arcs.fa: %.fa: %.orig.fa
+abyss2_bionano_arcs.fa: abyss2_bionano_arcs.orig.fa
 	gsed 's/scaffold//;s/,[^\t]*//' $< >$@
 
 # Supernova
@@ -420,7 +423,7 @@ sample=hg004
 	gsed -r 's/^>scaffold([^,]*),(.*)/>\1 scaffold\1,\2/' $< >$@
 
 # Aggregate the results.
-override s=$(starts_threshold)
+s=$(starts_threshold)
 
 %.depth.100.starts.$s.abyss-fac.tsv: \
 		%.abyss-fac.tsv \
