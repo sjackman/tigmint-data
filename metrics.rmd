@@ -26,6 +26,7 @@ library(ggrepel)
 library(knitr)
 library(readr)
 library(scales)
+library(stringr)
 library(tibble)
 library(tidyr)
 
@@ -100,11 +101,13 @@ ggplot(metrics) +
 metrics_table <- metrics %>%
 	transmute(
 		Assembly,
-		`NG50 (Mbp)` = round(NG50 / 1e6, 2),
+		`NG50 (Mbp)` = round(Scaffold_NG50 / 1e6, 2),
 		`NGA50 (Mbp)` = round(Scaffold_NGA50 / 1e6, 2),
 		Breakpoints = comma(Total_breakpoints),
 		Reduction = lag(Total_breakpoints) - Total_breakpoints,
-		Reduction = ifelse(Reduction >= 0, Reduction, NA))
+		Reduction = str_c(Reduction, " (", percent(Reduction / lag(Total_breakpoints)), ")"),
+		Reduction = ifelse(str_detect(Assembly, "Tigmint"), Reduction, NA))
+
 metrics_table
 write_tsv(metrics_table, output_tsv)
 ```
