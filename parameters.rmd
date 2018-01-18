@@ -26,6 +26,7 @@ library(ggrepel)
 library(knitr)
 library(readr)
 library(scales)
+library(stringr)
 library(tidyr)
 
 knit_print.data.frame <- function(x, ...) kable(x) %>% paste(collapse = "\n") %>% asis_output
@@ -65,14 +66,17 @@ ggplot(metrics) +
 ```{r parameters-table}
 parameters_table <- metrics %>%
 	arrange(Scaffold_NGA50) %>%
-	replace_na(list(Depth = "Original", Starts = "Original")) %>%
 	transmute(
 		Depth,
 		Starts,
 		`NG50 (Mbp)` = round(NG50 / 1e6, 2),
 		`NGA50 (Mbp)` = round(Scaffold_NGA50 / 1e6, 2),
-		Breakpoints = Total_breakpoints,
-		Reduction = max(Total_breakpoints) - Breakpoints)
+		Breakpoints = comma(Total_breakpoints),
+		Reduction = max(Total_breakpoints) - Total_breakpoints,
+		Reduction = str_c(Reduction, " (", percent(Reduction / max(Total_breakpoints)), ")"),
+		Reduction = ifelse(is.na(Depth), NA, Reduction)) %>%
+	replace_na(list(Depth = "Original", Starts = "Original"))
+
 parameters_table
 write_tsv(parameters_table, output_tsv)
 ```
