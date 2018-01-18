@@ -4,7 +4,7 @@
 t=16
 
 # Options for biomake
-QsubArgs=-c$t
+QsubArgs=-c$t --mem-per-cpu=7900M
 
 # gzip compression program
 gzip=pigz -p$t
@@ -517,6 +517,38 @@ hg004.mp.fq.gz: MPHG004-23100079.mp.fq.gz MPHG004-23110109.mp.fq.gz
 # Correct assembly errors with NxRepair.
 %.hg004.nxrepair.fa: %.hg004.mp.sort.bam %.fa %.hg004.mp.sort.bam.bai
 	$(time) nxrepair $< $*.fa $*.nxrepair $@
+
+# wgsim
+
+# Simulate paired-end reads using wgsim.
+sim.pe.1.fq:
+	wgsim -e 0.001 -r 0 -d 400 -s 90 -N 434296528 -1 250 -2 250 -S 1 $(ref_fa) sim.pe.1.fq sim.pe.2.fq
+
+# Simulate mate-pair reads using wgsim.
+sim.mp.1.fq:
+	wgsim -e 0.001 -r 0 -d 6000 -s 1400 -N 350564272 -1 125 -2 125 -S 1 $(ref_fa) sim.mp.2.fq sim.mp.1.fq
+
+# Interleave and compress paired-end reads.
+%.fq.gz: %.1.fq %.2.fq
+	seqtk mergepe $^ | $(gzip) >$@
+
+# ABySS
+abyss=/gsc/btl/linuxbrew/Cellar/abyss/2.0.1-k192/bin
+
+# Assemble the paired-end and mate-pair reads using ABySS.
+abyss/%-scaffolds.fa: %.pe.fq.gz %.mp.fq.gz
+	mkdir -p $(@D)
+	$(time) $(abyss)/abyss-pe -C $(@D) \
+		name=sim np=$t v=-v \
+		k=144 q=15 B=26G H=4 kc=3 \
+		l=40 s=1000 n=10 \
+		S=1000-10000 N=7 mp6k_de=--mean mp6k_n=1 \
+		lib=pe400 pe400=$(PWD)/$*.pe.fq.gz \
+		mp=mp6k mp6k=$(PWD)/$*.mp.fq.gz
+
+# Symlink the ABySS assembly.
+abyss-sim.fa: abyss/sim-scaffolds.fa
+	ln -sf $@ $<
 
 # QUAST
 
