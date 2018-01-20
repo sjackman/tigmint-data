@@ -532,6 +532,13 @@ sim.mp.1.fq:
 %.fq.gz: %.1.fq %.2.fq
 	seqtk mergepe $^ | $(gzip) >$@
 
+# LRSIM
+
+# Simulate linked reads using LRSIM.
+sim.lr: $(ref).fa
+	simulateLinkedReads -z $t -x 524 -d 1 -1 0 -4 0 -7 0 -0 0 -g $< -p $@
+	touch $@
+
 # ABySS
 abyss=/gsc/btl/linuxbrew/Cellar/abyss/2.0.1-k192/bin
 
