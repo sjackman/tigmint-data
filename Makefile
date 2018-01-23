@@ -156,10 +156,20 @@ abyss2_bionano_arcs.fa: abyss2_bionano_arcs.orig.fa
 NA24143-giab/outs/summary.csv:
 	supernova run --id=NA24143-giab --fastqs=/projects/btl/datasets/hsapiens/giab/HG004/10XGenomics/NA24143-chromium-raw --localcores=64 --localmem=500
 
+# Longranger
+
+# Extract 10x Chromium barcodes using longranger basic.
+%_lrbasic/outs/barcoded.fastq.gz: data/%/stamp
+	longranger basic --id=$*_lrbasic --fastqs=$(<D)
+
+# Symlink the longranger basic FASTQ file.
+sim.lr.lrbasic.fq.gz: simlr_lrbasic/outs/barcoded.fastq.gz
+	ln -sf $< $@
+
 # Barcodes
 
 # Add the barcode to the read ID, and skip reads without barcodes.
-%.bx.fq.gz: %.longranger.basic.fq.gz
+%.bx.fq.gz: %.lrbasic.fq.gz
 	gunzip -c $< | gawk ' \
 		{ bx = "NA" } \
 		match($$0, "BX:Z:([ACGT]*)-1", x) { bx = x[1] } \
@@ -554,8 +564,8 @@ abyss/%-scaffolds.fa: %.pe.fq.gz %.mp.fq.gz
 		mp=mp6k mp6k=$(PWD)/$*.mp.fq.gz
 
 # Symlink the ABySS assembly.
-abyss-sim.fa: abyss/sim-scaffolds.fa
-	ln -sf $@ $<
+sim.abyss.fa: abyss/sim-scaffolds.fa
+	ln -sf $< $@
 
 # QUAST
 
