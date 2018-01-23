@@ -93,7 +93,7 @@ supernova_bam:
 		supernova.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.abyss-fac.tsv \
 		supernova.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.GRCh38.samtobreak.tsv
 
-abyss2 discovardenovo discovardenovo-besst sga soapdenovo supernova:
+abyss2 discovardenovo discovardenovo-besst sga soapdenovo supernova sim.abyss:
 	$(MAKE) draft=$@ \
 		$@.abyss-fac.tsv \
 		$@.scaftigs.GRCh38.samtobreak.tsv \
@@ -104,6 +104,18 @@ abyss2 discovardenovo discovardenovo-besst sga soapdenovo supernova:
 		$@.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.GRCh38.samtobreak.tsv \
 		$@.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.abyss-fac.tsv \
 		$@.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.GRCh38.samtobreak.tsv
+
+sim:
+	$(MAKE) draft=sim.abyss sample=sim.lr \
+		sim.abyss.abyss-fac.tsv \
+		sim.abyss.scaftigs.GRCh38.samtobreak.tsv \
+		sim.abyss.sim.lr.bx.as100.nm5.bam.mi.bx.molecule.size2000.bed.genomecov.stats.tsv \
+		sim.abyss.sim.lr.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.abyss-fac.tsv \
+		sim.abyss.sim.lr.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.scaftigs.GRCh38.samtobreak.tsv \
+		sim.abyss.sim.lr.c$c_e$e_r$r.arcs.a$a_l$l.links.abyss-fac.tsv \
+		sim.abyss.sim.lr.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.GRCh38.samtobreak.tsv \
+		sim.abyss.sim.lr.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.sim.lr.c$c_e$e_r$r.arcs.a$a_l$l.links.abyss-fac.tsv \
+		sim.abyss.sim.lr.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.sim.lr.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.GRCh38.samtobreak.tsv
 
 assemblies: abyss2 discovardenovo discovardenovo-besst sga soapdenovo supernova
 
