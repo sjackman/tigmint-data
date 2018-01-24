@@ -582,12 +582,9 @@ sim.abyss.fa: abyss/sim-scaffolds.fa
 # QUAST
 
 # Calculate assembly contiguity and correctness metrics using QUAST.
-%.quast/transposed_report.tsv: %.fa %.tigmint.fa %.arcs.fa %.tigmint.arcs.fa
-	~/.linuxbrew/bin/quast.py -t$t -se --fast --large --min-identity 90 --scaffold-gap-max-size 1000000 -R $(ref_fa) -o $(@D) $^
-
-# Symlink the QUAST results.
-%.quast.tsv: %.quast/transposed_report.tsv
-	ln -sf $< $@
+%.quast.tsv: %.fa %.tigmint.fa %.arcs.fa %.tigmint.arcs.fa
+	~/.linuxbrew/bin/quast.py -t$t -se --fast --large --scaffold-gap-max-size 100000 --min-identity 90 -R $(ref_fa) -o $*.quast $^
+	ln -sf $*.quast/transposed_report.tsv $@
 
 # Aggregate the QUAST results.
 assemblies.quast.tsv: abyss2.quast.tsv discovardenovo-besst.quast.tsv supernova.quast.tsv
@@ -600,8 +597,12 @@ assemblies.quast.tsv: abyss2.quast.tsv discovardenovo-besst.quast.tsv supernova.
 	Rscript -e 'rmarkdown::render("metrics.rmd", "html_document", "$*.metrics.html", params = list(abyss_fac_tsv="$<", samtobreak_tsv="$*.samtobreak.tsv", output_tsv="$*.metrics.tsv"))'
 
 # Compute the assembly metrics for a set of assemblies.
+%.quast.html %.quast.out.tsv: %.quast.tsv
+	Rscript -e 'rmarkdown::render("quast.rmd", "html_document", "$*.quast.html", params = list(input_tsv="$<", output_tsv="$*.quast.out.tsv"))'
+
+# Compute the assembly metrics for a set of assemblies and produce a notebook.
 %.quast.nb.html %.quast.out.tsv: %.quast.tsv
-	Rscript -e 'rmarkdown::render("quast.rmd", "html_notebook", "$*.quast.html", params = list(input_tsv="$<", output_tsv="$*.quast.out.tsv"))'
+	Rscript -e 'rmarkdown::render("quast.rmd", "html_notebook", "$*.quast.nb.html", params = list(input_tsv="$<", output_tsv="$*.quast.out.tsv"))'
 
 # Compute the precision, recall, and G-score.
 %.samtobreak.gscore.html %.samtobreak.gscore.tsv: %.breakpoints.count.tsv %.samtobreak.tsv
