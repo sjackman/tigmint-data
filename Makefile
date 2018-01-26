@@ -508,7 +508,7 @@ s=$(starts_threshold)
 %.tigmint.fa: %.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.$s.breakpoints.tigs.fa
 	ln -sf $< $@
 
-%.arcs.fa: %.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.fa
+%.arcs.fa: %.$(sample).c$c_e$e_r$r.arcs.a$a_l$l.links.fa
 	ln -sf $< $@
 
 %.depth.100.starts.$s.abyss-fac.tsv: \
