@@ -623,7 +623,7 @@ abyss/%-scaffolds.fa: %.pe.fq.gz %.mp.fq.gz
 		name=sim np=$t v=-v \
 		k=144 q=15 B=26G H=4 kc=3 \
 		l=40 s=1000 n=10 \
-		S=1000-10000 N=7 mp6k_de=--mean mp6k_n=1 \
+		S=1000-10000 N=20 mp6k_de=--mean mp6k_n=1 \
 		lib=pe400 pe400=$(PWD)/$*.pe.fq.gz \
 		mp=mp6k mp6k=$(PWD)/$*.mp.fq.gz
 
