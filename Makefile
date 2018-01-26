@@ -19,7 +19,7 @@ a=0.1
 l=10
 
 # Report run time and memory usage
-time=env time -v -o $@.time
+time=command time -v -o $@.time
 export SHELL=zsh -e -o pipefail
 export REPORTTIME=1
 export TIMEFMT=time user=%U system=%S elapsed=%E cpu=%P memory=%M job=%J
