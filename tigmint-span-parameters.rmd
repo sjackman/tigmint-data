@@ -1,0 +1,98 @@
+---
+title: Determine sensitivity to parameters of Tigmint
+author: Shaun Jackman
+output:
+  html_document:
+    keep_md: true
+params:
+  input_tsv:
+    label: "Input TSV file of parameters and QUAST metrics"
+    value: "tigmint-span-parameters.quast.tsv"
+    input: text
+  output_tsv:
+    label: "Output TSV file of parameters and QUAST metrics"
+    value: "tigmint-span-parameters.quast.out.tsv"
+    input: text
+---
+
+```{r setup, message=FALSE}
+library(dplyr)
+library(ggplot2)
+library(ggrepel)
+library(knitr)
+library(readr)
+library(scales)
+library(stringr)
+library(tidyr)
+
+knit_print.data.frame <- function(x, ...) kable(x) %>% paste(collapse = "\n") %>% asis_output
+input_tsv <- params$input_tsv
+output_tsv <- params$output_tsv
+
+input_tsv
+output_tsv
+```
+
+# Read the data
+
+```{r read-data}
+metrics_orig <- read_tsv(input_tsv)
+
+metrics <- metrics_orig %>%
+	filter(str_detect(Assembly, "arcs"), !str_detect(Assembly, "broken")) %>%
+	separate(Assembly, "Assembler", extra = "drop", remove = FALSE) %>%
+	bind_cols(as_tibble(str_match(.$Assembly, "window([0-9]+).*span([0-9]+)")) %>%
+		transmute(Window = parse_integer(V2), Span = parse_integer(V3))) %>%
+	mutate(Label = str_c("w=", Window, " s=", Span)) %>%
+	rename(Misassemblies = `# misassemblies`, Scaffold_NGA50 = NGA50) %>%
+	filter(Assembler == "discovardenovo")
+```
+
+# Plot parameters and assembly metrics
+```{r parameters}
+ggplot(metrics) +
+	aes(x = Misassemblies, y = Scaffold_NGA50, label = Label) +
+	geom_point() +
+	geom_text_repel(nudge_x = 20, nudge_y = 100e3) +
+	scale_x_continuous(name = "QUAST Misassemblies", labels = comma) +
+	scale_y_continuous(name = "Scaffold NGA50 (Mbp)", labels = unit_format(unit = "Mbp", scale = 1e-6)) +
+	expand_limits(x = c(550, 700), y = c(6e6, 9e6)) +
+	theme_minimal(base_size = 20)
+```
+
+# Plot misassemblies vs window
+```{r misassemblies-window}
+ggplot(metrics) +
+	aes(x = Window, y = Misassemblies, label = Span) +
+	geom_point() +
+	geom_text_repel() +
+	scale_y_continuous(name = "QUAST Misassemblies", labels = comma) +
+	scale_x_log10(breaks = unique(metrics$Window)) +
+	theme_minimal(base_size = 20)
+```
+
+# Plot misassemblies vs spanning molecules
+```{r misassemblies-span}
+ggplot(metrics) +
+	aes(x = Span, y = Misassemblies, label = Window) +
+	geom_point() +
+	geom_text_repel() +
+	scale_y_continuous(name = "QUAST Misassemblies", labels = comma) +
+	scale_x_log10(breaks = unique(metrics$Span)) +
+	theme_minimal(base_size = 20)
+```
+
+# Table of parameters and assembly metrics
+```{r parameters-table}
+parameters_table <- metrics %>%
+	arrange(Scaffold_NGA50) %>%
+	transmute(
+		Window,
+		Span,
+		`NG50 (Mbp)` = round(NG50 / 1e6, 2),
+		`NGA50 (Mbp)` = round(Scaffold_NGA50 / 1e6, 2),
+		Misassemblies = comma(Misassemblies))
+
+parameters_table
+write_tsv(parameters_table, output_tsv)
+```
