@@ -166,11 +166,19 @@ falcon.fa:
 abyss2_bionano_arcs.fa: abyss2_bionano_arcs.orig.fa
 	gsed 's/scaffold//;s/,[^\t]*//' $< >$@
 
-# Supernova
+# Supernova 1.1
 
 # Assemble the linked reads with Supernova
-NA24143-giab/outs/summary.csv:
-	supernova run --id=NA24143-giab --fastqs=/projects/btl/datasets/hsapiens/giab/HG004/10XGenomics/NA24143-chromium-raw --localcores=64 --localmem=500
+supernova.stamp: data/hg004lr/stamp
+	supernova run --id=supernova --fastqs=$(<D) --localcores=64 --localmem=500
+	touch $@
+
+# Supernova 2
+
+# Assemble the linked reads with Supernova
+supernova2.stamp: data/hg004lr/stamp
+	supernova run --id=supernova2 --fastqs=$(<D) --localcores=$t --localmem=256
+	touch $@
 
 # Longranger
 
