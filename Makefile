@@ -209,11 +209,13 @@ sim.lr.lrbasic.fq.gz: simlr_lrbasic/outs/barcoded.fastq.gz
 
 # Align mate-pair reads to the draft genome and sort.
 $(draft).%.mp.sort.bam: %.mp.fq.gz $(draft).fa.bwt
-	bwa mem -t$t -p $(draft).fa $< | samtools sort -@$t -o $@
+	rm -f $(TMPDIR)/$@.* || true
+	bwa mem -t$t -p $(draft).fa $< | samtools sort -@$t -T$(TMPDIR)/$@ -o $@
 
 # Align linked reads to the draft genome and sort.
 $(draft).%.bam: %.fq.gz $(draft).fa.bwt
-	bwa mem -t$t -pC $(draft).fa $< | samtools view -h -F4 | samtools sort -@$t -o $@
+	rm -f $(TMPDIR)/$@.* || true
+	bwa mem -t$t -pC $(draft).fa $< | samtools view -u -F4 | samtools sort -@$t -T$(TMPDIR)/$@ -o $@
 
 # samtools
 
