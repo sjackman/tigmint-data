@@ -638,9 +638,9 @@ sim.abyss.fa: abyss/sim-scaffolds.fa
 # QUAST
 
 # Calculate assembly contiguity and correctness metrics using QUAST.
-%.quast.tsv: %.fa %.tigmint.fa %.arcs.fa %.tigmint.arcs.fa
-	~/.linuxbrew/bin/quast.py -t$t -se --fast --large --scaffold-gap-max-size 100000 --min-identity 90 -R $(ref_fa) -o $*.quast $^
-	ln -sf $*.quast/transposed_report.tsv $@
+%.quast.tsv: %.fa
+	~/.linuxbrew/bin/quast.py -t$t -se --fast --large --scaffold-gap-max-size 100000 --min-identity 90 -R $(ref_fa) -o $*.quast $<
+	cp $*.quast/transposed_report.tsv $@
 
 # Aggregate the QUAST results.
 assemblies.quast.tsv: abyss2.quast.tsv discovardenovo-besst.quast.tsv supernova.quast.tsv
