@@ -30,7 +30,6 @@ knit_print.data.frame <- function(x, ...) kable(x) %>% paste(collapse = "\n") %>
 input_tsv <- params$input_tsv
 output_tsv <- params$output_tsv
 
-input_tsv <- "assemblies.quast.tsv"
 c(input_tsv, output_tsv)
 ```
 
