@@ -414,7 +414,7 @@ group_threshold=1000
 # Parameters of Tigmint-span
 sample=hg004
 reads=$(sample).bx
-span=2
+span=20
 window=1000
 
 # Correct misassemblies using Tigmint.
