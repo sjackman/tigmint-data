@@ -158,6 +158,10 @@ sga.fa:
 soapdenovo.fa:
 	curl -o $@ ftp://ftp-trace.ncbi.nlm.nih.gov/giab/ftp/data/AshkenazimTrio/analysis/BCGSC_HG004_ABySS2.0_assemblies_12082016/soapdenovo/scaffolds.fa
 
+# Falcon
+falcon.fa:
+	curl -o $@ ftp://ftp-trace.ncbi.nlm.nih.gov/giab/ftp/data/AshkenazimTrio/analysis/MtSinai_PacBio_Assembly_falcon_03282016/hg004_p_and_a_ctg.fa
+
 # Rename the LINKS scaffolds.
 abyss2_bionano_arcs.fa: abyss2_bionano_arcs.orig.fa
 	gsed 's/scaffold//;s/,[^\t]*//' $< >$@
