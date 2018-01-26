@@ -184,11 +184,36 @@ supernova2.stamp: data/hg004lr/stamp
 	supernova run --id=supernova2 --fastqs=$(<D) --localcores=$t --localmem=256
 	touch $@
 
+# NA12878
+# See https://github.com/nanopore-wgs-consortium/NA12878
+
+# Downloads the 10x Genomics Chromium linked reads.
+data/wfu_fastqs.tar:
+	curl -o $@ http://s3-us-west-2.amazonaws.com/10x.files/samples/assembly/2.0.0/wfu/wfu_fastqs.tar
+
+# Extract the 10x Genomics Chromium linked reads.
+data/na12878lr.stamp: data/wfu_fastqs.tar
+	tar -C data -xf $<
+	mkdir -p $(@D)
+	cd data && ln -s wfu/*/*.fastq.gz na12878lr/
+	touch $@
+
+# Download the Canu assembly.
+# See https://genomeinformatics.github.io/NA12878-nanopore-assembly/
+na12878.canu.fa:
+	curl -o $@ http://s3.amazonaws.com/nanopore-human-wgs/canu.35x.contigs.polished2.fasta
+
+# Download the Supernova 2 assembly.
+# See https://support.10xgenomics.com/de-novo-assembly/datasets
+na12878.supernova2.fa:
+	curl http://cf.10xgenomics.com/samples/assembly/2.0.0/wfu/wfu_pseudohap.fasta.gz | gunzip -c >$@
+
 # Longranger
 
 # Extract 10x Chromium barcodes using longranger basic.
-%_lrbasic/outs/barcoded.fastq.gz: data/%/stamp
+%.lrbasic.fq.gz: data/%lr.stamp
 	longranger basic --id=$*_lrbasic --fastqs=$(<D)
+	ln -sf $*_lrbasic/outs/barcoded.fastq.gz $@
 
 # Symlink the longranger basic FASTQ file.
 sim.lr.lrbasic.fq.gz: simlr_lrbasic/outs/barcoded.fastq.gz
