@@ -162,6 +162,10 @@ soapdenovo.fa:
 falcon.fa:
 	curl -o $@ ftp://ftp-trace.ncbi.nlm.nih.gov/giab/ftp/data/AshkenazimTrio/analysis/MtSinai_PacBio_Assembly_falcon_03282016/hg004_p_and_a_ctg.fa
 
+# PBcR
+pbcr.fa:
+	curl https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/001/549/595/GCA_001549595.1_GIAB_Ashkenazim_Mother_HG004_NA24143_hu8E87A9_PacBio_Assembly_with_PBcR/GCA_001549595.1_GIAB_Ashkenazim_Mother_HG004_NA24143_hu8E87A9_PacBio_Assembly_with_PBcR_genomic.fna.gz | gunzip -c >$@
+
 # Rename the LINKS scaffolds.
 abyss2_bionano_arcs.fa: abyss2_bionano_arcs.orig.fa
 	gsed 's/scaffold//;s/,[^\t]*//' $< >$@
