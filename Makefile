@@ -380,6 +380,45 @@ group_threshold=1000
 		| sed 's/::/ /;s/^NN*//;s/NN*$$//;s/^$$/N/' >$@
 
 ################################################################################
+# Tigmint-span
+
+# Parameters of Tigmint-span
+sample=hg004
+reads=$(sample).bx
+span=2
+window=1000
+
+# Correct misassemblies using Tigmint.
+%.$(reads).as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.fa: %.fa
+	command time -v -o $@.all.time /home/sjackman/work/tigmint/tigmint-make t=$t window=$(window) span=$(span) draft=$* reads=$(reads) $@
+
+# Symlink the results of Tigmint-span and ARCS.
+%.tigmint-span.arcs.fa: %.$(reads).as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.$(sample).c$c_e$e_r$r.arcs.a$a_l$l.links.fa
+	ln -sf $< $@
+
+# Symlink the result of Tigmint-span.
+%.tigmint-span.fa: %.$(reads).as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.fa
+	ln -sf $< $@
+
+# Calculate assembly contiguity and correctness metrics using QUAST.
+%.tigmint-span.quast.tsv: %.fa %.tigmint-span.fa %.arcs.fa %.tigmint-span.arcs.fa
+	$(time) ~/.linuxbrew/bin/quast.py -t$t -se --fast --large --scaffold-gap-max-size 100000 --min-identity 90 -R $(ref_fa) -o $*.tigmint-span.quast $^
+	ln -sf $*.tigmint-span.quast/transposed_report.tsv $@
+
+# Calculate assembly contiguity and correctness metrics using QUAST.
+%.tigmint-span.window$(window).span$(span).quast.tsv: %.$(reads).as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.fa %.$(reads).as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.$(sample).c$c_e$e_r$r.arcs.a$a_l$l.links.fa
+	$(time) ~/.linuxbrew/bin/quast.py -t$t -se --fast --large --scaffold-gap-max-size 100000 --min-identity 90 -R $(ref_fa) -o $*.tigmint-span.window$(window).span$(span).quast $^
+	ln -sf $*.tigmint-span.window$(window).span$(span).quast/transposed_report.tsv $@
+
+# Aggregate the QUAST results.
+assemblies.tigmint-span.quast.tsv: abyss2.tigmint-span.quast.tsv discovardenovo-besst.tigmint-span.quast.tsv supernova.tigmint-span.quast.tsv
+	mlr --tsvlite cat $^ >$@
+
+%.tigmint-span: %.tigmint-span.window$(window).span$(span).quast.tsv
+
+tigmint-span: abyss2.tigmint-span.window$(window).span$(span).quast.tsv discovardenovo-besst.tigmint-span.window$(window).span$(span).quast.tsv supernova.tigmint-span.window$(window).span$(span).quast.tsv
+
+################################################################################
 # Calculate assembly contiguity and correctness metrics.
 
 # Reference genome
@@ -402,9 +441,8 @@ abyss_bin=/gsc/btl/linuxbrew/Cellar/abyss/2.0.2/bin
 	time bwa mem -xintractg -t$t $(ref_fa) $< >$@
 
 # Align paired-end reads to the draft genome and do not sort.
-sample=hg004
 %.$(sample).bx.sortn.bam: %.fa.bwt $(sample).bx.fq.gz
-	bwa mem -t$t -pC $*.fa $(sample).bx.fq.gz | samtools view -@$t -h -F4 -o $@
+	$(time) bwa mem -t$t -pC $*.fa $(sample).bx.fq.gz | samtools view -@$t -F4 -b -o $@
 
 # ABySS
 
@@ -621,6 +659,10 @@ assemblies.quast.tsv: abyss2.quast.tsv discovardenovo-besst.quast.tsv supernova.
 # Compute the precision, recall, and G-score.
 %.samtobreak.gscore.html %.samtobreak.gscore.tsv: %.breakpoints.count.tsv %.samtobreak.tsv
 	Rscript -e 'rmarkdown::render("precision-recall.rmd", "html_document", "$*.samtobreak.gscore.html", params = list(breakpoints_count_tsv="$<", samtobreak_tsv="$*.samtobreak.tsv", output_tsv="$*.samtobreak.gscore.tsv"))'
+
+# Compute the assembly metrics for parameter sensitivty of Tigmint-span.
+%.quast.parameters.html %.quast.parameters.tsv: %.quast.tsv
+	Rscript -e 'rmarkdown::render("tigmint-span-parameters.rmd", "html_document", "$*.quast.parameters.html", params = list(input_tsv="$<", output_tsv="$*.quast.parameters.tsv"))'
 
 # Compute the assembly metrics for parameter sensitivty.
 %.parameters.html %.parameters.tsv: %.abyss-fac.tsv %.samtobreak.tsv
