@@ -93,7 +93,7 @@ supernova_bam:
 		supernova.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.abyss-fac.tsv \
 		supernova.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.GRCh38.samtobreak.tsv
 
-abyss2 discovardenovo discovardenovo-besst sga soapdenovo supernova sim.abyss:
+abyss2 discovardenovo discovardenovo-besst sga soapdenovo supernova:
 	$(MAKE) draft=$@ \
 		$@.abyss-fac.tsv \
 		$@.scaftigs.GRCh38.samtobreak.tsv \
