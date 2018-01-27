@@ -192,11 +192,20 @@ data/wfu_fastqs.tar:
 	curl -o $@ http://s3-us-west-2.amazonaws.com/10x.files/samples/assembly/2.0.0/wfu/wfu_fastqs.tar
 
 # Extract the 10x Genomics Chromium linked reads.
-data/na12878lr.stamp: data/wfu_fastqs.tar
+data/wfu.stamp: data/wfu_fastqs.tar
 	tar -C data -xf $<
-	mkdir -p $(@D)
-	cd data && ln -s wfu/*/*.fastq.gz na12878lr/
+	mv data/wfu/HNJJKCCXX data/HNJJKCCXXlr
+	mv data/wfu/HNKKVCCXX data/HNKKVCCXXlr
+	rmdir data/wfu
 	touch $@
+
+# Create stamp files for each flowcell.
+data/HNJJKCCXXlr.stamp data/HNKKVCCXXlr.stamp: data/wfu.stamp
+	touch $@
+
+# Concatenate the 10x Genomics Chromium linked reads.
+na12878.lrbasic.fq.gz: HNJJKCCXX.lrbasic.fq.gz HNKKVCCXX.lrbasic.fq.gz
+	cat $^ >$@
 
 # Download the Canu assembly.
 # See https://genomeinformatics.github.io/NA12878-nanopore-assembly/
@@ -212,7 +221,7 @@ na12878.supernova2.fa:
 
 # Extract 10x Chromium barcodes using longranger basic.
 %.lrbasic.fq.gz: data/%lr.stamp
-	longranger basic --id=$*_lrbasic --fastqs=$(<D)
+	longranger basic --id=$*_lrbasic --fastqs=data/$*lr
 	ln -sf $*_lrbasic/outs/barcoded.fastq.gz $@
 
 # Symlink the longranger basic FASTQ file.
