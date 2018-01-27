@@ -668,22 +668,30 @@ sim.abyss.fa: abyss/sim-scaffolds.fa
 	cp $*.quast/transposed_report.tsv $@
 
 # Aggregate the QUAST results.
-assemblies.quast.tsv: abyss2.quast.tsv discovardenovo-besst.quast.tsv supernova.quast.tsv
+assemblies.window$(window).span$(span).quast.tsv: \
+		abyss2.quast.tsv \
+		abyss2.$(sample).bx.as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.quast.tsv \
+		abyss2.$(sample).c$c_e$e_r$r.arcs.a$a_l$l.links.quast.tsv \
+		abyss2.$(sample).bx.as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.$(sample).c$c_e$e_r$r.arcs.a$a_l$l.links.quast.tsv \
+		discovardenovo-besst.quast.tsv \
+		discovardenovo-besst.$(sample).bx.as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.quast.tsv \
+		discovardenovo-besst.$(sample).c$c_e$e_r$r.arcs.a$a_l$l.links.quast.tsv \
+		discovardenovo-besst.$(sample).bx.as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.$(sample).c$c_e$e_r$r.arcs.a$a_l$l.links.quast.tsv \
+		supernova.quast.tsv \
+		supernova.$(sample).bx.as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.quast.tsv \
+		supernova.$(sample).c$c_e$e_r$r.arcs.a$a_l$l.links.quast.tsv \
+		supernova.$(sample).bx.as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.$(sample).c$c_e$e_r$r.arcs.a$a_l$l.links.quast.tsv
 	mlr --tsvlite cat $^ >$@
 
 # RMarkdown reports
 
 # Compute the assembly metrics for a set of assemblies.
-%.metrics.html %.metrics.tsv: %.abyss-fac.tsv %.samtobreak.tsv
-	Rscript -e 'rmarkdown::render("metrics.rmd", "html_document", "$*.metrics.html", params = list(abyss_fac_tsv="$<", samtobreak_tsv="$*.samtobreak.tsv", output_tsv="$*.metrics.tsv"))'
+%.quast.metrics.html %.quast.metrics.tsv: %.quast.tsv
+	Rscript -e 'rmarkdown::render("quast.rmd", "html_document", "$*.quast.metrics.html", params = list(input_tsv="$<", output_tsv="$*.quast.metrics.tsv"))'
 
 # Compute the assembly metrics for a set of assemblies.
-%.quast.html %.quast.out.tsv: %.quast.tsv
-	Rscript -e 'rmarkdown::render("quast.rmd", "html_document", "$*.quast.html", params = list(input_tsv="$<", output_tsv="$*.quast.out.tsv"))'
-
-# Compute the assembly metrics for a set of assemblies and produce a notebook.
-%.quast.nb.html %.quast.out.tsv: %.quast.tsv
-	Rscript -e 'rmarkdown::render("quast.rmd", "html_notebook", "$*.quast.nb.html", params = list(input_tsv="$<", output_tsv="$*.quast.out.tsv"))'
+%.metrics.html %.metrics.tsv: %.abyss-fac.tsv %.samtobreak.tsv
+	Rscript -e 'rmarkdown::render("metrics.rmd", "html_document", "$*.metrics.html", params = list(abyss_fac_tsv="$<", samtobreak_tsv="$*.samtobreak.tsv", output_tsv="$*.metrics.tsv"))'
 
 # Compute the precision, recall, and G-score.
 %.samtobreak.gscore.html %.samtobreak.gscore.tsv: %.breakpoints.count.tsv %.samtobreak.tsv

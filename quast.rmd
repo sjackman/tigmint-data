@@ -11,7 +11,7 @@ params:
     input: text
   output_tsv:
     label: "Output TSV file of parameters and assembly metrics"
-    value: "assemblies.quast.out.tsv"
+    value: "assemblies.quast.metrics.tsv"
     input: text
 ---
 
@@ -36,10 +36,7 @@ c(input_tsv, output_tsv)
 # Read the data
 ```{r read-data, message=FALSE}
 quast_orig <- read_tsv(input_tsv)
-```
 
-# Tidy the data
-```{r tidy-data}
 metrics <- quast_orig %>%
 	filter(!str_detect(Assembly, "_broken")) %>%
 	rename(
@@ -50,8 +47,8 @@ metrics <- quast_orig %>%
 			str_replace("abyss2", "ABySS") %>%
 			str_replace("discovardenovo_besst", "DISCOVAR") %>%
 			str_replace("supernova", "Supernova") %>%
-			str_replace(".tigmint", "+Tigmint") %>%
-			str_replace(".arcs", "+ARCS")) %>%
+			str_replace("\\.hg004.*breaktigs", "+Tigmint") %>%
+			str_replace("\\.hg004.*links", "+ARCS")) %>%
 	separate(Assembly, "Assembler", extra = "drop", remove = FALSE)
 ```
 
