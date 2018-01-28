@@ -17,6 +17,7 @@ r=0.05
 # Parameters of LINKS
 a=0.1
 l=10
+z=500
 
 # Report run time and memory usage
 time=command time -v -o $@.time
@@ -528,9 +529,9 @@ abyss_bin=/gsc/btl/linuxbrew/Cellar/abyss/2.0.2/bin
 	bin/arcs-makeTSVfile $< $@ $*.fa
 
 # Scaffold the assembly using the ARCS graph and LINKS.
-%.$(sample).c$c_e$e_r$r.arcs.a$a_l$l.links.scaffolds.fa %.$(sample).c$c_e$e_r$r.arcs.a$a_l$l.links.assembly_correspondence.tsv: %.$(sample).c$c_e$e_r$r.arcs.links.tsv %.fa
-	cp $< $*.$(sample).c$c_e$e_r$r.arcs.a$a_l$l.links.tigpair_checkpoint.tsv
-	LINKS -k20 -l$l -t2 -a$a -x1 -s /dev/null -f $*.fa -b $*.$(sample).c$c_e$e_r$r.arcs.a$a_l$l.links
+%.$(sample).c$c_e$e_r$r.arcs.a$a_l$l_z$z.links.scaffolds.fa %.$(sample).c$c_e$e_r$r.arcs.a$a_l$l_z$z.links.assembly_correspondence.tsv: %.$(sample).c$c_e$e_r$r.arcs.links.tsv %.fa
+	cp $< $*.$(sample).c$c_e$e_r$r.arcs.a$a_l$l_z$z.links.tigpair_checkpoint.tsv
+	bin/LINKS -k20 -l$l -t2 -a$a -x1 -z$z -s /dev/null -f $*.fa -b $*.$(sample).c$c_e$e_r$r.arcs.a$a_l$l_z$z.links
 
 # Rename the scaffolds.
 %.links.fa: %.links.scaffolds.fa
@@ -676,20 +677,19 @@ sim.abyss.fa: abyss/sim-scaffolds.fa
 	~/.linuxbrew/bin/quast.py -t$t -se --fast --large --scaffold-gap-max-size 100000 --min-identity 90 -R $(ref_fa) -o $*.quast $<
 	cp $*.quast/transposed_report.tsv $@
 
-# Aggregate the QUAST results.
-assemblies.window$(window).span$(span).quast.tsv: \
-		abyss2.quast.tsv \
-		abyss2.$(sample).bx.as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.quast.tsv \
-		abyss2.$(sample).c$c_e$e_r$r.arcs.a$a_l$l.links.quast.tsv \
-		abyss2.$(sample).bx.as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.$(sample).c$c_e$e_r$r.arcs.a$a_l$l.links.quast.tsv \
-		discovardenovo-besst.quast.tsv \
-		discovardenovo-besst.$(sample).bx.as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.quast.tsv \
-		discovardenovo-besst.$(sample).c$c_e$e_r$r.arcs.a$a_l$l.links.quast.tsv \
-		discovardenovo-besst.$(sample).bx.as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.$(sample).c$c_e$e_r$r.arcs.a$a_l$l.links.quast.tsv \
-		supernova.quast.tsv \
-		supernova.$(sample).bx.as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.quast.tsv \
-		supernova.$(sample).c$c_e$e_r$r.arcs.a$a_l$l.links.quast.tsv \
-		supernova.$(sample).bx.as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.$(sample).c$c_e$e_r$r.arcs.a$a_l$l.links.quast.tsv
+# Aggregate the QUAST results of one assembler.
+%.window$(window).span$(span).a$a_l$l_z$z.quast.tsv: \
+		%.quast.tsv \
+		%.$(sample).bx.as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.quast.tsv \
+		%.$(sample).c$c_e$e_r$r.arcs.a$a_l$l_z$z.links.quast.tsv \
+		%.$(sample).bx.as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.$(sample).c$c_e$e_r$r.arcs.a$a_l$l_z$z.links.quast.tsv
+	mlr --tsvlite cat $^ >$@
+
+# Aggregate the QUAST results of all assemblers.
+assemblies.window$(window).span$(span).a$a_l$l_z$z.quast.tsv: \
+		abyss2.window$(window).span$(span).a$a_l$l_z$z.quast.tsv \
+		discovardenovo-besst.window$(window).span$(span).a$a_l$l_z$z.quast.tsv \
+		supernova.window$(window).span$(span).a$a_l$l_z$z.quast.tsv
 	mlr --tsvlite cat $^ >$@
 
 # RMarkdown reports
