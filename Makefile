@@ -14,6 +14,10 @@ c=5
 e=30000
 r=0.05
 
+# Parameters of ABySS-Scaffold
+s=10000
+n=20
+
 # Parameters of LINKS
 a=0.1
 l=10
@@ -537,6 +541,19 @@ abyss_bin=/gsc/btl/linuxbrew/Cellar/abyss/2.0.2/bin
 %.links.fa: %.links.scaffolds.fa
 	gsed -r 's/^>scaffold([^,]*),(.*)/>\1 scaffold\1,\2/' $< >$@
 
+# Scaffold the assembly using ARCS and ABySS-scaffold.
+%.$(sample).c$c_e$e_r$r.arcs.n$n.abyss-scaffold.path: %.$(sample).c$c_e$e_r$r.arcs.dist.gv
+	abyss-scaffold -k144 -s1000-100000 -n$n -G$(GwithN) -o $@ $<
+
+%.$(sample).c$c_e$e_r$r.arcs.n$n.abyss-scaffold.fa: %.fa %.fa.fai %.$(sample).c$c_e$e_r$r.arcs.n$n.abyss-scaffold.path
+	MergeContigs -v -k144 -o $@ $^
+
+%.$(sample).c$c_e$e_r$r.arcs.s$s_n$n.abyss-scaffold.path: %.$(sample).c$c_e$e_r$r.arcs.dist.gv
+	abyss-scaffold -k144 -s$s -n$n -G$(GwithN) -o $@ $<
+
+%.$(sample).c$c_e$e_r$r.arcs.s$s_n$n.abyss-scaffold.fa: %.fa %.fa.fai %.$(sample).c$c_e$e_r$r.arcs.s$s_n$n.abyss-scaffold.path
+	MergeContigs -v -k144 -o $@ $^
+
 # Aggregate the results.
 
 # Symlink the assemblies.
@@ -675,6 +692,46 @@ sim.abyss.fa: abyss/sim-scaffolds.fa
 %.quast.tsv: %.fa
 	~/.linuxbrew/bin/quast.py -t$t -se --fast --large --scaffold-gap-max-size 100000 --min-identity 90 -R $(ref_fa) -o $*.quast $<
 	cp $*.quast/transposed_report.tsv $@
+
+# ABySS-Scaffold with optimized s
+
+# Aggregate the QUAST results of one assembler.
+%.window$(window).span$(span).n$n.quast.tsv: \
+		%.quast.tsv \
+		%.$(sample).bx.as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.quast.tsv \
+		%.$(sample).c$c_e$e_r$r.arcs.n$n.abyss-scaffold.quast.tsv \
+		%.$(sample).bx.as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.$(sample).c$c_e$e_r$r.arcs.n$n.abyss-scaffold.quast.tsv
+	mlr --tsvlite cat $^ >$@
+
+# Aggregate the QUAST results of all assemblers.
+assemblies.window$(window).span$(span).n$n.quast.tsv: \
+		abyss2.window$(window).span$(span).n$n.quast.tsv \
+		discovardenovo-besst.window$(window).span$(span).n$n.quast.tsv \
+		falcon.window$(window).span$(span).n$n.quast.tsv \
+		pbcr.window$(window).span$(span).n$n.quast.tsv \
+		supernova.window$(window).span$(span).n$n.quast.tsv
+	mlr --tsvlite cat $^ >$@
+
+# ABySS-Scaffold with fixed s
+
+# Aggregate the QUAST results of one assembler.
+%.window$(window).span$(span).s$s_n$n.quast.tsv: \
+		%.quast.tsv \
+		%.$(sample).bx.as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.quast.tsv \
+		%.$(sample).c$c_e$e_r$r.arcs.s$s_n$n.abyss-scaffold.quast.tsv \
+		%.$(sample).bx.as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.$(sample).c$c_e$e_r$r.arcs.s$s_n$n.abyss-scaffold.quast.tsv
+	mlr --tsvlite cat $^ >$@
+
+# Aggregate the QUAST results of all assemblers.
+assemblies.window$(window).span$(span).s$s_n$n.quast.tsv: \
+		abyss2.window$(window).span$(span).s$s_n$n.quast.tsv \
+		discovardenovo-besst.window$(window).span$(span).s$s_n$n.quast.tsv \
+		falcon.window$(window).span$(span).s$s_n$n.quast.tsv \
+		pbcr.window$(window).span$(span).s$s_n$n.quast.tsv \
+		supernova.window$(window).span$(span).s$s_n$n.quast.tsv
+	mlr --tsvlite cat $^ >$@
+
+# LINKS
 
 # Aggregate the QUAST results of one assembler.
 %.window$(window).span$(span).a$a_l$l_z$z.quast.tsv: \
