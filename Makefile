@@ -709,6 +709,12 @@ assemblies.window$(window).span$(span).n$n.quast.tsv: \
 		supernova.window$(window).span$(span).n$n.quast.tsv
 	mlr --tsvlite cat $^ >$@
 
+# Aggregate the QUAST results of the NA12878 assemblies.
+na12878.window$(window).span$(span).n$n.quast.tsv: \
+		na12878.canu.window$(window).span$(span).n$n.quast.tsv \
+		na12878.supernova2.window$(window).span$(span).n$n.quast.tsv
+	mlr --tsvlite cat $^ >$@
+
 # ABySS-Scaffold with fixed s
 
 # Aggregate the QUAST results of one assembler.
@@ -728,6 +734,12 @@ assemblies.window$(window).span$(span).s$s_n$n.quast.tsv: \
 		supernova.window$(window).span$(span).s$s_n$n.quast.tsv
 	mlr --tsvlite cat $^ >$@
 
+# Aggregate the QUAST results of the NA12878 assemblies.
+na12878.window$(window).span$(span).s$s_n$n.quast.tsv: \
+		na12878.canu.window$(window).span$(span).s$s_n$n.quast.tsv \
+		na12878.supernova2.window$(window).span$(span).s$s_n$n.quast.tsv
+	mlr --tsvlite cat $^ >$@
+
 # LINKS
 
 # Aggregate the QUAST results of one assembler.
@@ -743,6 +755,12 @@ assemblies.window$(window).span$(span).a$a_l$l_z$z.quast.tsv: \
 		abyss2.window$(window).span$(span).a$a_l$l_z$z.quast.tsv \
 		discovardenovo-besst.window$(window).span$(span).a$a_l$l_z$z.quast.tsv \
 		supernova.window$(window).span$(span).a$a_l$l_z$z.quast.tsv
+	mlr --tsvlite cat $^ >$@
+
+# Aggregate the QUAST results of the NA12878 assemblies.
+na12878.window$(window).span$(span).a$a_l$l_z$z.quast.tsv: \
+		na12878.canu.window$(window).span$(span).a$a_l$l_z$z.quast.tsv \
+		na12878.supernova2.window$(window).span$(span).a$a_l$l_z$z.quast.tsv
 	mlr --tsvlite cat $^ >$@
 
 # RMarkdown reports
