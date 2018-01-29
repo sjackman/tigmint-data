@@ -189,6 +189,11 @@ supernova2.stamp: data/hg004lr/stamp
 	supernova run --id=supernova2 --fastqs=$(<D) --localcores=$t --localmem=256
 	touch $@
 
+# Generate the assembled pseudohap FASTA file.
+supernova2.fa: supernova2.stamp
+	supernova mkoutput --style=pseudohap --asmdir=supernova2/outs/assembly --outprefix=supernova2
+	gunzip -c supernova2.fasta.gz >$@
+
 # NA12878
 # See https://github.com/nanopore-wgs-consortium/NA12878
 
