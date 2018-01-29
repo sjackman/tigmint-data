@@ -428,7 +428,7 @@ span=20
 window=2000
 
 # Correct misassemblies using Tigmint.
-%.$(reads).as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.fa: %.fa.bwt
+%.$(reads).as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.fa: %.fa.bwt $(reads).fq.gz
 	command time -v -o $@.all.time /home/sjackman/work/tigmint/tigmint-make t=$t window=$(window) span=$(span) draft=$* reads=$(reads) $@
 
 # Symlink the results of Tigmint-span and ARCS.
