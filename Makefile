@@ -538,37 +538,36 @@ abyss_bin=/gsc/btl/linuxbrew/Cellar/abyss/2.0.2/bin
 	gsed -r 's/^>scaffold([^,]*),(.*)/>\1 scaffold\1,\2/' $< >$@
 
 # Aggregate the results.
-s=$(starts_threshold)
 
 # Symlink the assemblies.
-%.tigmint.arcs.fa: %.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.$s.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.fa
+%.tigmint.arcs.fa: %.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.fa
 	ln -sf $< $@
 
-%.tigmint.fa: %.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.$s.breakpoints.tigs.fa
+%.tigmint.fa: %.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.fa
 	ln -sf $< $@
 
 %.arcs.fa: %.$(sample).c$c_e$e_r$r.arcs.a$a_l$l.links.fa
 	ln -sf $< $@
 
-%.depth.100.starts.$s.abyss-fac.tsv: \
+%.depth.100.starts.2.abyss-fac.tsv: \
 		%.abyss-fac.tsv \
-		%.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.$s.breakpoints.tigs.abyss-fac.tsv \
+		%.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.abyss-fac.tsv \
 		%.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.abyss-fac.tsv \
-		%.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.$s.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.abyss-fac.tsv
+		%.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.abyss-fac.tsv
 	mlr --tsvlite cat $^ >$@
 
-%.depth.100.starts.$s.scaftigs.abyss-fac.tsv: \
+%.depth.100.starts.2.scaftigs.abyss-fac.tsv: \
 		%.scaftigs.abyss-fac.tsv \
-		%.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.$s.breakpoints.tigs.scaftigs.abyss-fac.tsv \
+		%.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.scaftigs.abyss-fac.tsv \
 		%.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.abyss-fac.tsv \
-		%.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.$s.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.abyss-fac.tsv
+		%.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.abyss-fac.tsv
 	mlr --tsvlite cat $^ >$@
 
-%.depth.100.starts.$s.samtobreak.tsv: \
+%.depth.100.starts.2.samtobreak.tsv: \
 		%.scaftigs.GRCh38.samtobreak.tsv \
-		%.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.$s.breakpoints.tigs.scaftigs.GRCh38.samtobreak.tsv \
+		%.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.scaftigs.GRCh38.samtobreak.tsv \
 		%.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.GRCh38.samtobreak.tsv \
-		%.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.$s.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.GRCh38.samtobreak.tsv
+		%.hg004.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.GRCh38.samtobreak.tsv
 	mlr --tsvlite cat $^ >$@
 
 abyss2.depth.100.starts.1-5.breakpoints.count.tsv: \
