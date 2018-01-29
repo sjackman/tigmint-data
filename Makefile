@@ -471,9 +471,6 @@ ref_fa=$(ref).fa
 # Size of the reference genome with Ns
 GwithN=3088269832
 
-# Size of the reference genome without Ns
-GwithoutN=2937639113
-
 # Path to ABySS executables
 abyss_bin=/gsc/btl/linuxbrew/Cellar/abyss/2.0.2/bin
 
