@@ -425,7 +425,7 @@ group_threshold=1000
 sample=hg004
 reads=$(sample).bx
 span=20
-window=1000
+window=2000
 
 # Correct misassemblies using Tigmint.
 %.$(reads).as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.fa: %.fa.bwt
