@@ -15,7 +15,7 @@ e=30000
 r=0.05
 
 # Parameters of ABySS-Scaffold
-s=10000
+s=5000
 n=20
 
 # Parameters of LINKS
