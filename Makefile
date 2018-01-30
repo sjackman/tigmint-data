@@ -122,17 +122,11 @@ sim:
 		sim.abyss.sim.lr.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.sim.lr.c$c_e$e_r$r.arcs.a$a_l$l.links.abyss-fac.tsv \
 		sim.abyss.sim.lr.bx.as100.nm5.bam.mi.bx.molecule.size2000.depth.100.starts.2.breakpoints.tigs.sim.lr.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.GRCh38.samtobreak.tsv
 
-assemblies: abyss2 discovardenovo discovardenovo-besst sga soapdenovo supernova
-
-quast: assemblies.quast.tsv
-
 reports: \
-	abyss2.depth.80-120.starts.2-4.arcs.parameters.html \
-	assemblies.depth.100.starts.2.metrics.html
+	hg004.window2000.span20.s5000_n20.quast.metrics.html
 
 tables: \
-	abyss2.depth.80-120.starts.2-4.arcs.parameters.tsv.md \
-	assemblies.depth.100.starts.2.metrics.tsv.md
+	hg004.window2000.span20.s5000_n20.quast.metrics.tsv.md
 
 nxrepair: \
 	abyss2.hg004.nxrepair.fa \
@@ -705,12 +699,10 @@ sim.abyss.fa: abyss/sim-scaffolds.fa
 		%.$(sample).bx.as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.$(sample).c$c_e$e_r$r.arcs.n$n.abyss-scaffold.quast.tsv
 	mlr --tsvlite cat $^ >$@
 
-# Aggregate the QUAST results of all assemblers.
-assemblies.window$(window).span$(span).n$n.quast.tsv: \
+# Aggregate the QUAST results of the HG004 assemblies.
+hg004.window$(window).span$(span).n$n.quast.tsv: \
 		abyss2.window$(window).span$(span).n$n.quast.tsv \
 		discovardenovo-besst.window$(window).span$(span).n$n.quast.tsv \
-		falcon.window$(window).span$(span).n$n.quast.tsv \
-		pbcr.window$(window).span$(span).n$n.quast.tsv \
 		supernova.window$(window).span$(span).n$n.quast.tsv
 	mlr --tsvlite cat $^ >$@
 
@@ -730,12 +722,10 @@ na12878.window$(window).span$(span).n$n.quast.tsv: \
 		%.$(sample).bx.as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.$(sample).c$c_e$e_r$r.arcs.s$s_n$n.abyss-scaffold.quast.tsv
 	mlr --tsvlite cat $^ >$@
 
-# Aggregate the QUAST results of all assemblers.
-assemblies.window$(window).span$(span).s$s_n$n.quast.tsv: \
+# Aggregate the QUAST results of the HG004 assemblies.
+hg004.window$(window).span$(span).s$s_n$n.quast.tsv: \
 		abyss2.window$(window).span$(span).s$s_n$n.quast.tsv \
 		discovardenovo-besst.window$(window).span$(span).s$s_n$n.quast.tsv \
-		falcon.window$(window).span$(span).s$s_n$n.quast.tsv \
-		pbcr.window$(window).span$(span).s$s_n$n.quast.tsv \
 		supernova.window$(window).span$(span).s$s_n$n.quast.tsv
 	mlr --tsvlite cat $^ >$@
 
@@ -743,6 +733,21 @@ assemblies.window$(window).span$(span).s$s_n$n.quast.tsv: \
 na12878.window$(window).span$(span).s$s_n$n.quast.tsv: \
 		na12878.canu.window$(window).span$(span).s$s_n$n.quast.tsv \
 		na12878.supernova2.window$(window).span$(span).s$s_n$n.quast.tsv
+	mlr --tsvlite cat $^ >$@
+
+# Aggregate the QUAST results of the long reads assemblies.
+sms.window$(window).span$(span).s$s_n$n.quast.tsv: \
+		falcon.window$(window).span$(span).s$s_n$n.quast.tsv \
+		na12878.canu.window$(window).span$(span).s$s_n$n.quast.tsv
+	mlr --tsvlite cat $^ >$@
+
+# Aggregate the QUAST results of some assemblies.
+assemblies.window$(window).span$(span).s$s_n$n.quast.tsv: \
+		abyss2.window$(window).span$(span).s$s_n$n.quast.tsv \
+		falcon.window$(window).span$(span).s$s_n$n.quast.tsv \
+		na12878.canu.window$(window).span$(span).s$s_n$n.quast.tsv \
+		discovardenovo-besst.window$(window).span$(span).s$s_n$n.quast.tsv \
+		supernova.window$(window).span$(span).s$s_n$n.quast.tsv
 	mlr --tsvlite cat $^ >$@
 
 # LINKS
@@ -755,8 +760,8 @@ na12878.window$(window).span$(span).s$s_n$n.quast.tsv: \
 		%.$(sample).bx.as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.$(sample).c$c_e$e_r$r.arcs.a$a_l$l_z$z.links.quast.tsv
 	mlr --tsvlite cat $^ >$@
 
-# Aggregate the QUAST results of all assemblers.
-assemblies.window$(window).span$(span).a$a_l$l_z$z.quast.tsv: \
+# Aggregate the QUAST results of the HG004 assemblies.
+hg004.window$(window).span$(span).a$a_l$l_z$z.quast.tsv: \
 		abyss2.window$(window).span$(span).a$a_l$l_z$z.quast.tsv \
 		discovardenovo-besst.window$(window).span$(span).a$a_l$l_z$z.quast.tsv \
 		supernova.window$(window).span$(span).a$a_l$l_z$z.quast.tsv
