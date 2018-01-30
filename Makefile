@@ -145,6 +145,10 @@ abyss2.fa:
 discovardenovo.fa:
 	curl -o $@ ftp://ftp-trace.ncbi.nlm.nih.gov/giab/ftp/data/AshkenazimTrio/analysis/BCGSC_HG004_ABySS2.0_assemblies_12082016/discovar/contigs.fa
 
+# DISCOVARdenovo + ABySS-scaffold
+discovardenovo-abyss.fa:
+	curl -o $@ https://ftp-trace.ncbi.nlm.nih.gov/giab/ftp/data/AshkenazimTrio/analysis/BCGSC_HG004_ABySS2.0_assemblies_12082016/discovar/abyss-scaffolds.fa
+
 # DISCOVARdenovo + BESST
 discovardenovo-besst.fa:
 	curl -o $@ ftp://ftp-trace.ncbi.nlm.nih.gov/giab/ftp/data/AshkenazimTrio/analysis/BCGSC_HG004_ABySS2.0_assemblies_12082016/discovar/besst-scaffolds.fa
