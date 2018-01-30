@@ -793,7 +793,7 @@ na12878.window$(window).span$(span).a$a_l$l_z$z.quast.tsv: \
 
 # Compute the assembly metrics for parameter sensitivty of Tigmint-span.
 %.quast.parameters.html %.quast.parameters.tsv: %.quast.tsv
-	Rscript -e 'rmarkdown::render("tigmint-span-parameters.rmd", "html_document", "$*.quast.parameters.html", params = list(input_tsv="$<", output_tsv="$*.quast.parameters.tsv"))'
+	Rscript -e 'rmarkdown::render("tigmint-parameters.rmd", "html_document", "$*.quast.parameters.html", params = list(input_tsv="$<", output_tsv="$*.quast.parameters.tsv"))'
 
 # Compute the assembly metrics for parameter sensitivty.
 %.parameters.html %.parameters.tsv: %.abyss-fac.tsv %.samtobreak.tsv
