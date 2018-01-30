@@ -48,6 +48,7 @@ metrics <- quast_orig %>%
 			str_replace("abyss2", "ABySS") %>%
 			str_replace("canu", "Canu") %>%
 			str_replace("discovardenovo_besst", "DISCOVAR") %>%
+			str_replace("falcon", "Falcon") %>%
 			str_replace("supernova", "Supernova") %>%
 			str_replace("\\.(hg004|HNJJKCCXX).*breaktigs", "+Tigmint") %>%
 			str_replace("\\.(hg004|HNJJKCCXX).*abyss_scaffold", "+ARCS") %>%
@@ -65,7 +66,7 @@ ggplot(metrics) +
 	scale_y_continuous(name = "Scaffold NGA50", labels = unit_format(unit = "Mbp", scale = 1e-6)) +
 	scale_colour_brewer(palette = "Dark2", guide = FALSE) +
 	scale_shape_discrete(guide = FALSE) +
-	expand_limits(x = c(0, 1500), y = c(0, 15e6)) +
+	expand_limits(x = c(0, 2000), y = c(0, 15e6)) +
 	theme_minimal(base_size = 20)
 ```
 
