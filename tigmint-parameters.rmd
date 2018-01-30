@@ -16,6 +16,7 @@ params:
 ---
 
 ```{r setup, message=FALSE}
+library(cowplot)
 library(dplyr)
 library(ggplot2)
 library(ggrepel)
@@ -39,82 +40,117 @@ output_tsv
 metrics_orig <- read_tsv(input_tsv)
 
 metrics <- metrics_orig %>%
+	distinct() %>%
+	rename(Misassemblies = `# misassemblies`) %>%
 	filter(str_detect(Assembly, "arcs"), !str_detect(Assembly, "broken")) %>%
 	separate(Assembly, "Assembler", extra = "drop", remove = FALSE) %>%
+	mutate(Assembler = Assembler %>%
+			str_replace("abyss2", "ABySS") %>%
+			str_replace("discovardenovo", "DISCOVAR")) %>%
 	bind_cols(as_tibble(str_match(.$Assembly, "window([0-9]+).*span([0-9]+)")) %>%
 		transmute(Window = parse_integer(V2), Span = parse_integer(V3))) %>%
-	mutate(Label = str_c("w=", Window, " s=", Span)) %>%
-	rename(Misassemblies = `# misassemblies`, Scaffold_NGA50 = NGA50)
+	mutate(Label = str_c("w=", Window, " s=", Span))
 ```
 
 # Plot parameters and assembly metrics
 ```{r parameters}
-ggplot(metrics) +
-	aes(x = Misassemblies, y = Scaffold_NGA50, label = Label) +
+ggplot(drop_na(metrics)) +
+	aes(x = Misassemblies, y = NGA50, label = Label) +
 	geom_point() +
 	geom_text_repel() +
 	scale_x_continuous(name = "QUAST Misassemblies", labels = comma) +
-	scale_y_continuous(name = "Scaffold NGA50 (Mbp)", labels = unit_format(unit = "Mbp", scale = 1e-6)) +
+	scale_y_continuous(name = "Scaffold NGA50", labels = unit_format(unit = "Mbp", scale = 1e-6)) +
 	theme_minimal(base_size = 20)
 ```
 
 # Plot misassemblies vs window
 ```{r misassemblies-window}
-ggplot(metrics) +
-	aes(x = Window, y = Misassemblies, label = Span) +
+plot_misassemblies_window <- ggplot(metrics %>% filter(Span == 20)) +
+	aes(x = Window, y = Misassemblies,
+		colour = Assembler, group = Assembler, shape = Assembler) +
 	geom_point() +
-	geom_smooth(method = "lm") +
-	geom_text_repel() +
-	scale_y_continuous(name = "QUAST Misassemblies", labels = comma) +
-	scale_x_log10(breaks = unique(metrics$Window), minor_breaks = NULL) +
-	theme_minimal(base_size = 20)
+	geom_line() +
+	scale_y_continuous(name = "Misassemblies", labels = comma) +
+	scale_x_log10(name = "Window (bp)",
+		breaks = unique(metrics$Window), minor_breaks = NULL) +
+	scale_colour_brewer(palette = "Dark2") +
+	theme_minimal(base_size = 20) +
+	theme(legend.position="bottom")
+plot_misassemblies_window
 ```
 
 # Plot NGA50 vs window
 ```{r NGA50-window}
-ggplot(metrics) +
-	aes(x = Window, y = Scaffold_NGA50, label = Span) +
-	geom_point(aes(colour = Misassemblies)) +
-	geom_smooth(method = "lm") +
-	geom_text_repel() +
-	scale_y_continuous(name = "QUAST Scaffold NGA50", labels = comma) +
-	scale_x_log10(breaks = unique(metrics$Window), minor_breaks = NULL) +
-	theme_minimal(base_size = 20)
+plot_nga50_window <- ggplot(metrics %>% filter(Span == 20)) +
+	aes(x = Window, y = NGA50,
+		colour = Assembler, group = Assembler, shape = Assembler) +
+	geom_point() +
+	geom_line() +
+	scale_y_continuous(name = "NGA50 (Mbp)", labels = unit_format(unit = "", scale = 1e-6)) +
+	scale_x_log10(name = "Window (bp)",
+		breaks = unique(metrics$Window), minor_breaks = NULL) +
+	scale_colour_brewer(palette = "Dark2") +
+	theme_minimal(base_size = 20) +
+	theme(legend.position="bottom")
+plot_nga50_window
 ```
 
 # Plot misassemblies vs spanning molecules
-```{r misassemblies-span}
-ggplot(metrics) +
-	aes(x = Span, y = Misassemblies, label = Window) +
-	geom_point(aes(colour = Scaffold_NGA50)) +
-	geom_smooth(method = "lm") +
-	geom_text_repel() +
-	scale_y_continuous(name = "QUAST Misassemblies", labels = comma) +
-	scale_x_log10(breaks = unique(metrics$Span), minor_breaks = NULL) +
-	theme_minimal(base_size = 20)
+```{r misassemblies-molecules}
+plot_misassemblies_molecules <- ggplot(metrics %>% filter(Window == 2000)) +
+	aes(x = Span, y = Misassemblies,
+		colour = Assembler, group = Assembler, shape = Assembler) +
+	geom_point() +
+	geom_line() +
+	scale_y_continuous(name = "Misassemblies", labels = comma) +
+	scale_x_log10(name = "Spanning molecules",
+		breaks = unique(metrics$Span), minor_breaks = NULL) +
+	scale_colour_brewer(palette = "Dark2") +
+	theme_minimal(base_size = 20) +
+	theme(legend.position="bottom")
+plot_misassemblies_molecules
 ```
 
 # Plot NGA50 vs spanning molecules
-```{r NGA50-span}
-ggplot(metrics) +
-	aes(x = Span, y = Scaffold_NGA50, label = Window) +
-	geom_point(aes(colour = Misassemblies)) +
-	geom_smooth(method = "lm") +
-	geom_text_repel() +
-	scale_y_continuous(name = "QUAST Scaffold NGA50", labels = comma) +
-	scale_x_log10(breaks = unique(metrics$Span), minor_breaks = NULL) +
-	theme_minimal(base_size = 20)
+```{r NGA50-molecules}
+plot_nga50_molecules <- ggplot(metrics %>% filter(Window == 2000)) +
+	aes(x = Span, y = NGA50,
+		colour = Assembler, group = Assembler, shape = Assembler) +
+	geom_point() +
+	geom_line() +
+	scale_y_continuous(name = "NGA50 (Mbp)", labels = unit_format(unit = "", scale = 1e-6)) +
+	scale_x_log10(name = "Spanning molecules",
+		breaks = unique(metrics$Span), minor_breaks = NULL) +
+	scale_colour_brewer(palette = "Dark2") +
+	theme_minimal(base_size = 20) +
+	theme(legend.position="bottom")
+plot_nga50_molecules
+```
+
+# Metrics vs parameters
+```{r parameters, fig.width = 6, fig.height = 4}
+plot_grid(ncol = 2,
+	rel_heights = c(1, 1, 0.1),
+	labels = c("A", "B", "C", "D"),
+	plot_misassemblies_molecules + theme(legend.position = "none"),
+	plot_misassemblies_window + theme(legend.position = "none"),
+	plot_nga50_molecules + theme(legend.position = "none"),
+	plot_nga50_window + theme(legend.position = "none"),
+	NULL,
+	get_legend(plot_misassemblies_molecules))
 ```
 
 # Table of parameters and assembly metrics
 ```{r parameters-table}
 parameters_table <- metrics %>%
-	arrange(Scaffold_NGA50) %>%
+	arrange(Assembler, !is.na(Window), Window, Span) %>%
+	replace_na(list(Window = "Original", Span = "Original")) %>%
 	transmute(
+		Assembler,
 		Window,
 		Span,
 		`NG50 (Mbp)` = round(NG50 / 1e6, 2),
-		`NGA50 (Mbp)` = round(Scaffold_NGA50 / 1e6, 2),
+		`NGA50 (Mbp)` = round(NGA50 / 1e6, 2),
 		Misassemblies = comma(Misassemblies))
 
 parameters_table
