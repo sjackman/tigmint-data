@@ -47,17 +47,20 @@ metrics <- quast_orig %>%
 			str_replace("na12878.", "") %>%
 			str_replace("abyss2", "ABySS") %>%
 			str_replace("canu", "Canu") %>%
-			str_replace("discovardenovo_besst", "DISCOVAR") %>%
+			str_replace("discovardenovo_abyss", "DISCO+ABySS") %>%
+			str_replace("discovardenovo_besst", "DISCO+BESST") %>%
 			str_replace("falcon", "Falcon") %>%
+			str_replace("sim.abyss", "Sim") %>%
+			str_replace("supernova2", "Supernova") %>%
 			str_replace("supernova", "Supernova") %>%
-			str_replace("\\.(hg004|HNJJKCCXX).*breaktigs", "+Tigmint") %>%
-			str_replace("\\.(hg004|HNJJKCCXX).*abyss_scaffold", "+ARCS") %>%
-			str_replace("\\.(hg004|HNJJKCCXX).*links", "+ARCS")) %>%
+			str_replace("\\.(hg004|HNJJKCCXX|sim.lr).*breaktigs", "+Tigmint") %>%
+			str_replace("\\.(hg004|HNJJKCCXX|sim.lr).*abyss_scaffold", "+ARCS") %>%
+			str_replace("\\.(hg004|HNJJKCCXX|sim.lr).*links", "+ARCS")) %>%
 	separate(Assembly, "Assembler", extra = "drop", remove = FALSE)
 ```
 
 # Plot NGA50 and breakpoints
-```{r nga50-breakpoints}
+```{r nga50-breakpoints, fig.width=6, fig.height=4, dpi=300}
 ggplot(metrics) +
 	aes(x = Misassemblies, y = Scaffold_NGA50, label = Assembly) +
 	geom_point(aes(shape = Assembler)) +
@@ -66,7 +69,7 @@ ggplot(metrics) +
 	scale_y_continuous(name = "Scaffold NGA50", labels = unit_format(unit = "Mbp", scale = 1e-6)) +
 	scale_colour_brewer(palette = "Dark2", guide = FALSE) +
 	scale_shape_discrete(guide = FALSE) +
-	expand_limits(x = c(0, 2000), y = c(0, 15e6)) +
+	expand_limits(x = c(0, 2000), y = c(0, 17e6)) +
 	theme_minimal(base_size = 20)
 ```
 
