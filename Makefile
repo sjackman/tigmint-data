@@ -738,6 +738,7 @@ na12878.window$(window).span$(span).n$n.quast.tsv: \
 # Aggregate the QUAST results of the HG004 assemblies.
 hg004.window$(window).span$(span).s$s_n$n.quast.tsv: \
 		abyss2.window$(window).span$(span).s$s_n$n.quast.tsv \
+		discovardenovo-abyss.window$(window).span$(span).s$s_n$n.quast.tsv \
 		discovardenovo-besst.window$(window).span$(span).s$s_n$n.quast.tsv \
 		supernova2.window$(window).span$(span).s$s_n$n.quast.tsv
 	mlr --tsvlite cat $^ >$@
