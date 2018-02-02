@@ -460,9 +460,14 @@ window=2000
 assemblies.tigmint-span.quast.tsv: abyss2.tigmint-span.quast.tsv discovardenovo-besst.tigmint-span.quast.tsv supernova.tigmint-span.quast.tsv
 	mlr --tsvlite cat $^ >$@
 
-%.tigmint-span: %.tigmint-span.window$(window).span$(span).quast.tsv
-
-tigmint-span: abyss2.tigmint-span.window$(window).span$(span).quast.tsv discovardenovo-besst.tigmint-span.window$(window).span$(span).quast.tsv supernova.tigmint-span.window$(window).span$(span).quast.tsv
+# Count the number of cuts made by Tigmint in scaffolds larger than the QUAST's sequence length threshold.
+%.$(reads).as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.cuts.tsv: %.$(reads).as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.bed %.fa.fai
+	(printf "Assembly\tCuts\n$*.$(reads).as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs\t"; \
+	mlr --nidx --fs tab --no-mmap --from $< \
+		then cut -f 1,4 \
+		then join -f <(cut -f 1,2 $*.fa.fai) -j 1 \
+		then filter '$$2 >= 3000' \
+		| grep -c -- '-[0-9]*[24680]$$' >$@
 
 ################################################################################
 # Calculate assembly contiguity and correctness metrics.
