@@ -763,6 +763,29 @@ assemblies.window$(window).span$(span).s$s_n$n.quast.tsv: \
 		supernova2.window$(window).span$(span).s$s_n$n.quast.tsv
 	mlr --tsvlite cat $^ >$@
 
+# Aggregate the abyss-samtobreak results of one assembler.
+%.window$(window).span$(span).s$s_n$n.scaftigs.GRCh38.samtobreak.tsv: \
+		%.scaftigs.GRCh38.samtobreak.tsv \
+		%.$(sample).bx.as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.scaftigs.GRCh38.samtobreak.tsv \
+		%.$(sample).c$c_e$e_r$r.arcs.s$s_n$n.abyss-scaffold.scaftigs.GRCh38.samtobreak.tsv \
+		%.$(sample).bx.as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.$(sample).c$c_e$e_r$r.arcs.s$s_n$n.abyss-scaffold.scaftigs.GRCh38.samtobreak.tsv
+	mlr --tsvlite cat $^ >$@
+
+# Aggregate the abyss-samtobreak results of the HG004 assemblies.
+hg004.window$(window).span$(span).s$s_n$n.scaftigs.GRCh38.samtobreak.tsv: \
+		abyss2.window$(window).span$(span).s$s_n$n.scaftigs.GRCh38.samtobreak.tsv \
+		falcon.window$(window).span$(span).s$s_n$n.scaftigs.GRCh38.samtobreak.tsv \
+		discovardenovo-abyss.window$(window).span$(span).s$s_n$n.scaftigs.GRCh38.samtobreak.tsv \
+		discovardenovo-besst.window$(window).span$(span).s$s_n$n.scaftigs.GRCh38.samtobreak.tsv \
+		supernova2.window$(window).span$(span).s$s_n$n.scaftigs.GRCh38.samtobreak.tsv
+	mlr --tsvlite cat $^ >$@
+
+# Aggregate the abyss-samtobreak results of the NA12878 assemblies.
+na12878.window$(window).span$(span).s$s_n$n.scaftigs.GRCh38.samtobreak.tsv: \
+		na12878.canu.window$(window).span$(span).s$s_n$n.scaftigs.GRCh38.samtobreak.tsv \
+		na12878.supernova2.window$(window).span$(span).s$s_n$n.scaftigs.GRCh38.samtobreak.tsv
+	mlr --tsvlite cat $^ >$@
+
 # LINKS
 
 # Aggregate the QUAST results of one assembler.
