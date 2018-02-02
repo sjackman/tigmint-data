@@ -43,7 +43,8 @@ metrics <- quast_orig %>%
 		Misassemblies = `# misassemblies`,
 		Scaffold_NG50 = NG50,
 		Scaffold_NGA50 = NGA50) %>%
-	mutate(Assembly = Assembly %>%
+	mutate(
+		Assembly = Assembly %>%
 			str_replace("na12878.", "") %>%
 			str_replace("abyss2", "ABySS") %>%
 			str_replace("canu", "Canu") %>%
@@ -55,8 +56,8 @@ metrics <- quast_orig %>%
 			str_replace("supernova", "Supernova") %>%
 			str_replace("\\.(hg004|HNJJKCCXX|sim.lr).*breaktigs", "+Tigmint") %>%
 			str_replace("\\.(hg004|HNJJKCCXX|sim.lr).*abyss_scaffold", "+ARCS") %>%
-			str_replace("\\.(hg004|HNJJKCCXX|sim.lr).*links", "+ARCS")) %>%
-	separate(Assembly, "Assembler", extra = "drop", remove = FALSE)
+			str_replace("\\.(hg004|HNJJKCCXX|sim.lr).*links", "+ARCS"),
+		Assembler = str_extract(Assembly, "^(DISCO\\+)?[A-Za-z]+"))
 ```
 
 # Plot NGA50 and breakpoints
@@ -69,7 +70,7 @@ ggplot(metrics) +
 	scale_y_continuous(name = "Scaffold NGA50", labels = unit_format(unit = "Mbp", scale = 1e-6)) +
 	scale_colour_brewer(palette = "Dark2", guide = FALSE) +
 	scale_shape_discrete(guide = FALSE) +
-	expand_limits(x = c(0, 2000), y = c(0, 17e6)) +
+	expand_limits(x = c(0, 1200), y = c(0, 25e6)) +
 	theme_minimal(base_size = 20)
 ```
 
