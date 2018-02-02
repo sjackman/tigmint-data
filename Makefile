@@ -716,7 +716,7 @@ sim.abyss.fa: abyss/sim-scaffolds.fa
 hg004.window$(window).span$(span).n$n.quast.tsv: \
 		abyss2.window$(window).span$(span).n$n.quast.tsv \
 		discovardenovo-besst.window$(window).span$(span).n$n.quast.tsv \
-		supernova.window$(window).span$(span).n$n.quast.tsv
+		supernova2.window$(window).span$(span).n$n.quast.tsv
 	mlr --tsvlite cat $^ >$@
 
 # Aggregate the QUAST results of the NA12878 assemblies.
@@ -739,7 +739,7 @@ na12878.window$(window).span$(span).n$n.quast.tsv: \
 hg004.window$(window).span$(span).s$s_n$n.quast.tsv: \
 		abyss2.window$(window).span$(span).s$s_n$n.quast.tsv \
 		discovardenovo-besst.window$(window).span$(span).s$s_n$n.quast.tsv \
-		supernova.window$(window).span$(span).s$s_n$n.quast.tsv
+		supernova2.window$(window).span$(span).s$s_n$n.quast.tsv
 	mlr --tsvlite cat $^ >$@
 
 # Aggregate the QUAST results of the NA12878 assemblies.
@@ -760,7 +760,7 @@ assemblies.window$(window).span$(span).s$s_n$n.quast.tsv: \
 		falcon.window$(window).span$(span).s$s_n$n.quast.tsv \
 		na12878.canu.window$(window).span$(span).s$s_n$n.quast.tsv \
 		discovardenovo-besst.window$(window).span$(span).s$s_n$n.quast.tsv \
-		supernova.window$(window).span$(span).s$s_n$n.quast.tsv
+		supernova2.window$(window).span$(span).s$s_n$n.quast.tsv
 	mlr --tsvlite cat $^ >$@
 
 # LINKS
