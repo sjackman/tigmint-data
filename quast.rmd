@@ -57,21 +57,23 @@ metrics <- quast_orig %>%
 			str_replace("\\.(hg004|HNJJKCCXX|sim.lr).*breaktigs", "+Tigmint") %>%
 			str_replace("\\.(hg004|HNJJKCCXX|sim.lr).*abyss_scaffold", "+ARCS") %>%
 			str_replace("\\.(hg004|HNJJKCCXX|sim.lr).*links", "+ARCS"),
-		Assembler = str_extract(Assembly, "^(DISCO\\+)?[A-Za-z]+"))
+		Assembler = str_extract(Assembly, "^(DISCO\\+)?[A-Za-z]+"),
+		Tigmint_ARCS = str_extract(Assembly, "Tigmint\\+ARCS|ARCS|Tigmint"),
+		Tigmint_ARCS = ifelse(!is.na(Tigmint_ARCS), Tigmint_ARCS, Assembler))
 ```
 
 # Plot NGA50 and breakpoints
 ```{r nga50-breakpoints, fig.width=6, fig.height=4, dpi=300}
 ggplot(metrics) +
-	aes(x = Misassemblies, y = Scaffold_NGA50, label = Assembly) +
-	geom_point(aes(shape = Assembler)) +
-	geom_text_repel(aes(colour = Assembler), segment.alpha = 0.5) +
+	aes(x = Misassemblies, y = Scaffold_NGA50, label = Tigmint_ARCS, shape = Assembler, colour = Assembler) +
+	geom_point(colour = "black") +
+	geom_text_repel(segment.alpha = 0.5) +
 	scale_x_continuous(name = "QUAST Misassemblies", labels = comma) +
 	scale_y_continuous(name = "Scaffold NGA50", labels = unit_format(unit = "Mbp", scale = 1e-6)) +
 	scale_colour_brewer(palette = "Dark2", guide = FALSE) +
-	scale_shape_discrete(guide = FALSE) +
-	expand_limits(x = c(0, 1200), y = c(0, 25e6)) +
-	theme_minimal(base_size = 20)
+	expand_limits(y = c(0, 25e6)) +
+	theme_minimal(base_size = 14) +
+	theme(legend.position = "bottom", legend.title = element_blank())
 ```
 
 # Table of assembly metrics
