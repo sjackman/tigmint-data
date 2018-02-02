@@ -809,6 +809,45 @@ na12878.window$(window).span$(span).a$a_l$l_z$z.quast.tsv: \
 		na12878.supernova2.window$(window).span$(span).a$a_l$l_z$z.quast.tsv
 	mlr --tsvlite cat $^ >$@
 
+# Aggregate the QUAST results of the HG004 parameter sweep.
+hg004.parameters.s5000_n20.quast.tsv: \
+		abyss2.window200.span20.s5000_n20.quast.tsv \
+		abyss2.window500.span20.s5000_n20.quast.tsv \
+		abyss2.window1000.span20.s5000_n20.quast.tsv \
+		abyss2.window2000.span20.s5000_n20.quast.tsv \
+		abyss2.window5000.span20.s5000_n20.quast.tsv \
+		abyss2.window10000.span20.s5000_n20.quast.tsv \
+		abyss2.window2000.span2.s5000_n20.quast.tsv \
+		abyss2.window2000.span5.s5000_n20.quast.tsv \
+		abyss2.window2000.span10.s5000_n20.quast.tsv \
+		abyss2.window2000.span20.s5000_n20.quast.tsv \
+		abyss2.window2000.span50.s5000_n20.quast.tsv \
+		abyss2.window2000.span100.s5000_n20.quast.tsv \
+		discovardenovo-besst.window200.span20.s5000_n20.quast.tsv \
+		discovardenovo-besst.window500.span20.s5000_n20.quast.tsv \
+		discovardenovo-besst.window1000.span20.s5000_n20.quast.tsv \
+		discovardenovo-besst.window2000.span20.s5000_n20.quast.tsv \
+		discovardenovo-besst.window5000.span20.s5000_n20.quast.tsv \
+		discovardenovo-besst.window10000.span20.s5000_n20.quast.tsv \
+		discovardenovo-besst.window2000.span2.s5000_n20.quast.tsv \
+		discovardenovo-besst.window2000.span5.s5000_n20.quast.tsv \
+		discovardenovo-besst.window2000.span10.s5000_n20.quast.tsv \
+		discovardenovo-besst.window2000.span20.s5000_n20.quast.tsv \
+		discovardenovo-besst.window2000.span50.s5000_n20.quast.tsv \
+		discovardenovo-besst.window2000.span100.s5000_n20.quast.tsv
+	mlr --tsvlite cat $^ | sort -u >$@
+
+# Aggregate the QUAST results of the simulation parameter sweep.
+sim.abyss.parameters.s5000_n20.quast.tsv: \
+		sim.abyss.sim.lr.bx.as0.65.nm5.molecule.size2000.trim0.window1000.span2.breaktigs.quast.tsv \
+		sim.abyss.sim.lr.bx.as0.65.nm5.molecule.size2000.trim0.window1000.span5.breaktigs.quast.tsv \
+		sim.abyss.sim.lr.bx.as0.65.nm5.molecule.size2000.trim0.window1000.span10.breaktigs.quast.tsv \
+		sim.abyss.sim.lr.bx.as0.65.nm5.molecule.size2000.trim0.window1000.span20.breaktigs.quast.tsv \
+		sim.abyss.sim.lr.bx.as0.65.nm5.molecule.size2000.trim0.window1000.span50.breaktigs.quast.tsv \
+		sim.abyss.sim.lr.bx.as0.65.nm5.molecule.size2000.trim0.window1000.span100.breaktigs.quast.tsv \
+		sim.abyss.sim.lr.bx.as0.65.nm5.molecule.size2000.trim0.window2000.span20.breaktigs.quast.tsv
+	mlr --tsvlite cat $^ >$@
+
 # RMarkdown reports
 
 # Compute the assembly metrics for a set of assemblies.
