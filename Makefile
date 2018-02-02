@@ -485,8 +485,8 @@ abyss_bin=/gsc/btl/linuxbrew/Cellar/abyss/2.0.2/bin
 # BWA
 
 # Align an assembly to the reference using BWA-MEM.
-%.$(ref).sam: %.fa
-	time bwa mem -xintractg -t$t $(ref_fa) $< >$@
+%.$(ref).sam.gz: %.fa
+	time bwa mem -xintractg -t$t $(ref_fa) $< | $(gzip) >$@
 
 # Align paired-end reads to the draft genome and do not sort.
 %.$(sample).bx.sortn.bam: %.fa.bwt $(sample).bx.fq.gz
@@ -503,11 +503,15 @@ abyss_bin=/gsc/btl/linuxbrew/Cellar/abyss/2.0.2/bin
 	$(abyss_bin)/abyss-fac -G$(GwithN) -t500 $< >$@
 
 # Calculate assembly contiguity and correctness metrics with abyss-samtobreak.
-%.samtobreak.txt: %.sam
-	(echo "File: $<"; abyss-samtobreak --text -G$(GwithN) -q10 -l500 $<) >$@
+%.samtobreak.tsv: %.sam.gz
+	gunzip -c $< | bin/abyss-samtobreak -G$(GwithN) -q10 -l500 >$@
+
+# Calculate assembly contiguity and correctness metrics with abyss-samtobreak.
+%.samtobreak.txt: %.sam.gz
+	bin/abyss-samtobreak --text -G$(GwithN) -q10 -l500 $< >$@
 
 # Convert samtobreak.txt to TSV using Miller.
-%.samtobreak.tsv: %.samtobreak.txt
+%.samtobreak.txt.tsv: %.samtobreak.txt
 	mlr --ixtab --ips ': ' --otsvlite --from $< \
 		then rename 'Number of unmapped contigs,Unmapped_contigs' \
 		then rename 'Total length of unmapped contigs,Unmapped_bases' \
