@@ -21,6 +21,7 @@ library(dplyr)
 library(ggplot2)
 library(ggrepel)
 library(knitr)
+library(magrittr)
 library(readr)
 library(scales)
 library(stringr)
@@ -42,7 +43,7 @@ metrics_orig <- read_tsv(input_tsv)
 metrics <- metrics_orig %>%
 	distinct() %>%
 	rename(Misassemblies = `# misassemblies`) %>%
-	filter(str_detect(Assembly, "arcs"), !str_detect(Assembly, "broken")) %>%
+	filter(!str_detect(Assembly, "arcs"), !str_detect(Assembly, "broken")) %>%
 	separate(Assembly, "Assembler", extra = "drop", remove = FALSE) %>%
 	mutate(Assembler = Assembler %>%
 			str_replace("abyss2", "ABySS") %>%
@@ -52,15 +53,24 @@ metrics <- metrics_orig %>%
 	mutate(Label = str_c("w=", Window, " s=", Span))
 ```
 
+# Determine the range of the data
+```{r range}
+ranges <- metrics %>% summarize_at(vars(Window, Span, Misassemblies, NGA50), funs(min, max), na.rm = TRUE)
+misassemblies_range <- ranges %$% c(0, Misassemblies_max)
+nga50_range <- ranges %$% c(0, NGA50_max)
+window_range <- ranges %$% c(Window_min, Window_max)
+span_range <- ranges %$% c(Span_min, Span_max)
+```
+
 # Plot parameters and assembly metrics
-```{r parameters}
+```{r NGA50-misassemblies}
 ggplot(drop_na(metrics)) +
 	aes(x = Misassemblies, y = NGA50, label = Label) +
 	geom_point() +
 	geom_text_repel() +
 	scale_x_continuous(name = "QUAST Misassemblies", labels = comma) +
 	scale_y_continuous(name = "Scaffold NGA50", labels = unit_format(unit = "Mbp", scale = 1e-6)) +
-	theme_minimal(base_size = 20)
+	theme_minimal(base_size = 11)
 ```
 
 # Plot misassemblies vs window
@@ -71,10 +81,11 @@ plot_misassemblies_window <- ggplot(metrics %>% filter(Span == 20)) +
 	geom_point() +
 	geom_line() +
 	scale_y_continuous(name = "Misassemblies", labels = comma) +
-	scale_x_log10(name = "Window (bp)",
+	scale_x_log10(name = "Window (bp)", labels = comma,
 		breaks = unique(metrics$Window), minor_breaks = NULL) +
 	scale_colour_brewer(palette = "Dark2") +
-	theme_minimal(base_size = 20) +
+	expand_limits(x = window_range, y = misassemblies_range) +
+	theme_minimal(base_size = 11) +
 	theme(legend.position="bottom")
 plot_misassemblies_window
 ```
@@ -87,10 +98,11 @@ plot_nga50_window <- ggplot(metrics %>% filter(Span == 20)) +
 	geom_point() +
 	geom_line() +
 	scale_y_continuous(name = "NGA50 (Mbp)", labels = unit_format(unit = "", scale = 1e-6)) +
-	scale_x_log10(name = "Window (bp)",
+	scale_x_log10(name = "Window (bp)", labels = comma,
 		breaks = unique(metrics$Window), minor_breaks = NULL) +
 	scale_colour_brewer(palette = "Dark2") +
-	theme_minimal(base_size = 20) +
+	expand_limits(x = window_range, y = nga50_range) +
+	theme_minimal(base_size = 11) +
 	theme(legend.position="bottom")
 plot_nga50_window
 ```
@@ -106,7 +118,8 @@ plot_misassemblies_molecules <- ggplot(metrics %>% filter(Window == 2000)) +
 	scale_x_log10(name = "Spanning molecules",
 		breaks = unique(metrics$Span), minor_breaks = NULL) +
 	scale_colour_brewer(palette = "Dark2") +
-	theme_minimal(base_size = 20) +
+	expand_limits(x = span_range, y = misassemblies_range) +
+	theme_minimal(base_size = 11) +
 	theme(legend.position="bottom")
 plot_misassemblies_molecules
 ```
@@ -122,13 +135,14 @@ plot_nga50_molecules <- ggplot(metrics %>% filter(Window == 2000)) +
 	scale_x_log10(name = "Spanning molecules",
 		breaks = unique(metrics$Span), minor_breaks = NULL) +
 	scale_colour_brewer(palette = "Dark2") +
-	theme_minimal(base_size = 20) +
+	expand_limits(x = span_range, y = nga50_range) +
+	theme_minimal(base_size = 11) +
 	theme(legend.position="bottom")
 plot_nga50_molecules
 ```
 
 # Metrics vs parameters
-```{r parameters, fig.width = 6, fig.height = 4}
+```{r parameters, fig.width = 6, fig.height = 4, dpi = 300}
 plot_grid(ncol = 2,
 	rel_heights = c(1, 1, 0.1),
 	labels = c("A", "B", "C", "D"),
