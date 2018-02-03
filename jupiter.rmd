@@ -14,8 +14,8 @@ library(grid)
 ```
 
 ```{r read-images}
-jupiter_abyss <- rsvg("images/jupiter_abyss.svg")
-jupiter_abyss_depth2 <- rsvg("images/jupiter_abyss_starts2.svg")
+jupiter_abyss <- rsvg("images/jupiter-abyss.svg")
+jupiter_abyss_depth2 <- rsvg("images/jupiter-abyss-tigmint.svg")
 ```
 
 ```{r jupiter, fig.height=3, fig.width=6, dpi=300}
