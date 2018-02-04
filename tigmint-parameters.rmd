@@ -44,10 +44,9 @@ metrics <- metrics_orig %>%
 	distinct() %>%
 	rename(Misassemblies = `# misassemblies`) %>%
 	filter(!str_detect(Assembly, "arcs"), !str_detect(Assembly, "broken")) %>%
-	separate(Assembly, "Assembler", extra = "drop", remove = FALSE) %>%
-	mutate(Assembler = Assembler %>%
-			str_replace("abyss2", "ABySS") %>%
-			str_replace("discovardenovo", "DISCOVAR")) %>%
+	mutate(Assembler = Assembly %>%
+			str_replace("abyss2.*", "ABySS") %>%
+			str_replace("discovardenovo_besst.*", "DISCO+BESST")) %>%
 	bind_cols(as_tibble(str_match(.$Assembly, "window([0-9]+).*span([0-9]+)")) %>%
 		transmute(Window = parse_integer(V2), Span = parse_integer(V3))) %>%
 	mutate(Label = str_c("w=", Window, " s=", Span))
