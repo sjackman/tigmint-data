@@ -824,6 +824,18 @@ hg004.parameters.s5000_n20.quast.tsv: \
 		abyss2.window2000.span20.s5000_n20.quast.tsv \
 		abyss2.window2000.span50.s5000_n20.quast.tsv \
 		abyss2.window2000.span100.s5000_n20.quast.tsv \
+		discovardenovo-abyss.window200.span20.s5000_n20.quast.tsv \
+		discovardenovo-abyss.window500.span20.s5000_n20.quast.tsv \
+		discovardenovo-abyss.window1000.span20.s5000_n20.quast.tsv \
+		discovardenovo-abyss.window2000.span20.s5000_n20.quast.tsv \
+		discovardenovo-abyss.window5000.span20.s5000_n20.quast.tsv \
+		discovardenovo-abyss.window10000.span20.s5000_n20.quast.tsv \
+		discovardenovo-abyss.window2000.span2.s5000_n20.quast.tsv \
+		discovardenovo-abyss.window2000.span5.s5000_n20.quast.tsv \
+		discovardenovo-abyss.window2000.span10.s5000_n20.quast.tsv \
+		discovardenovo-abyss.window2000.span20.s5000_n20.quast.tsv \
+		discovardenovo-abyss.window2000.span50.s5000_n20.quast.tsv \
+		discovardenovo-abyss.window2000.span100.s5000_n20.quast.tsv \
 		discovardenovo-besst.window200.span20.s5000_n20.quast.tsv \
 		discovardenovo-besst.window500.span20.s5000_n20.quast.tsv \
 		discovardenovo-besst.window1000.span20.s5000_n20.quast.tsv \
