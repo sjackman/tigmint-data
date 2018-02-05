@@ -431,12 +431,17 @@ group_threshold=1000
 # Parameters of Tigmint-span
 sample=hg004
 reads=$(sample).bx
+dist=50000
 span=20
 window=2000
 
 # Correct misassemblies using Tigmint.
 %.$(reads).as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.fa: %.fa.bwt $(reads).fq.gz
-	command time -v -o $@.all.time /home/sjackman/work/tigmint/tigmint-make t=$t window=$(window) span=$(span) draft=$* reads=$(reads) $@
+	command time -v -o $@.all.time /home/sjackman/work/tigmint/tigmint-make t=$t dist=$(dist) window=$(window) span=$(span) draft=$* reads=$(reads) $@
+
+# Correct misassemblies using Tigmint, setting the dist parameter.
+%.$(reads).as0.65.nm5.dist$(dist).molecule.size2000.trim0.window$(window).span$(span).breaktigs.fa: %.fa.bwt $(reads).fq.gz
+	command time -v -o $@.all.time /home/sjackman/work/tigmint/tigmint-make t=$t dist=$(dist) window=$(window) span=$(span) draft=$* reads=$(reads) $@
 
 # Symlink the results of Tigmint-span and ARCS.
 %.tigmint-span.arcs.fa: %.$(reads).as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.$(sample).c$c_e$e_r$r.arcs.a$a_l$l.links.fa
