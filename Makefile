@@ -472,7 +472,7 @@ assemblies.tigmint-span.quast.tsv: abyss2.tigmint-span.quast.tsv discovardenovo-
 		then cut -f 1,4 \
 		then join -f <(cut -f 1,2 $*.fa.fai) -j 1 \
 		then filter '$$2 >= 3000' \
-		| grep -c -- '-[0-9]*[24680]$$' >$@
+		| grep -c -- '-[0-9]*[24680]$$') >$@
 
 ################################################################################
 # Calculate assembly contiguity and correctness metrics.
