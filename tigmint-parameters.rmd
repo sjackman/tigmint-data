@@ -46,6 +46,7 @@ metrics <- metrics_orig %>%
 	filter(!str_detect(Assembly, "arcs"), !str_detect(Assembly, "broken")) %>%
 	mutate(Assembler = Assembly %>%
 			str_replace("abyss2.*", "ABySS") %>%
+			str_replace("discovardenovo_abyss.*", "DISCO+ABySS") %>%
 			str_replace("discovardenovo_besst.*", "DISCO+BESST")) %>%
 	bind_cols(as_tibble(str_match(.$Assembly, "window([0-9]+).*span([0-9]+)")) %>%
 		transmute(Window = parse_integer(V2), Span = parse_integer(V3))) %>%
@@ -143,14 +144,12 @@ plot_nga50_molecules
 # Metrics vs parameters
 ```{r parameters, fig.width = 6, fig.height = 4, dpi = 300}
 plot_grid(ncol = 2,
-	rel_heights = c(1, 1, 0.1),
 	labels = c("A", "B", "C", "D"),
 	plot_misassemblies_molecules + theme(legend.position = "none"),
 	plot_misassemblies_window + theme(legend.position = "none"),
 	plot_nga50_molecules + theme(legend.position = "none"),
-	plot_nga50_window + theme(legend.position = "none"),
-	NULL,
-	get_legend(plot_misassemblies_molecules))
+	plot_nga50_window + theme(legend.position = "none")) %>%
+	plot_grid(ncol = 1, rel_heights = c(2, 0.1), get_legend(plot_misassemblies_molecules))
 ```
 
 # Table of parameters and assembly metrics
