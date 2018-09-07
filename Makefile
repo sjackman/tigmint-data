@@ -829,18 +829,18 @@ hg004.parameters.s5000_n20.quast.tsv: \
 		abyss2.window2000.span20.s5000_n20.quast.tsv \
 		abyss2.window2000.span50.s5000_n20.quast.tsv \
 		abyss2.window2000.span100.s5000_n20.quast.tsv \
-		discovardenovo-abyss.window200.span20.s5000_n20.quast.tsv \
-		discovardenovo-abyss.window500.span20.s5000_n20.quast.tsv \
-		discovardenovo-abyss.window1000.span20.s5000_n20.quast.tsv \
-		discovardenovo-abyss.window2000.span20.s5000_n20.quast.tsv \
-		discovardenovo-abyss.window5000.span20.s5000_n20.quast.tsv \
-		discovardenovo-abyss.window10000.span20.s5000_n20.quast.tsv \
-		discovardenovo-abyss.window2000.span2.s5000_n20.quast.tsv \
-		discovardenovo-abyss.window2000.span5.s5000_n20.quast.tsv \
-		discovardenovo-abyss.window2000.span10.s5000_n20.quast.tsv \
-		discovardenovo-abyss.window2000.span20.s5000_n20.quast.tsv \
-		discovardenovo-abyss.window2000.span50.s5000_n20.quast.tsv \
-		discovardenovo-abyss.window2000.span100.s5000_n20.quast.tsv \
+		discovardenovo-abyss.hg004.bx.as0.65.nm5.molecule.size2000.trim0.window200.span20.breaktigs.quast.tsv \
+		discovardenovo-abyss.hg004.bx.as0.65.nm5.molecule.size2000.trim0.window500.span20.breaktigs.quast.tsv \
+		discovardenovo-abyss.hg004.bx.as0.65.nm5.molecule.size2000.trim0.window1000.span20.breaktigs.quast.tsv \
+		discovardenovo-abyss.hg004.bx.as0.65.nm5.molecule.size2000.trim0.window2000.span20.breaktigs.quast.tsv \
+		discovardenovo-abyss.hg004.bx.as0.65.nm5.molecule.size2000.trim0.window5000.span20.breaktigs.quast.tsv \
+		discovardenovo-abyss.hg004.bx.as0.65.nm5.molecule.size2000.trim0.window10000.span20.breaktigs.quast.tsv \
+		discovardenovo-abyss.hg004.bx.as0.65.nm5.molecule.size2000.trim0.window2000.span2.breaktigs.quast.tsv \
+		discovardenovo-abyss.hg004.bx.as0.65.nm5.molecule.size2000.trim0.window2000.span5.breaktigs.quast.tsv \
+		discovardenovo-abyss.hg004.bx.as0.65.nm5.molecule.size2000.trim0.window2000.span10.breaktigs.quast.tsv \
+		discovardenovo-abyss.hg004.bx.as0.65.nm5.molecule.size2000.trim0.window2000.span20.breaktigs.quast.tsv \
+		discovardenovo-abyss.hg004.bx.as0.65.nm5.molecule.size2000.trim0.window2000.span50.breaktigs.quast.tsv \
+		discovardenovo-abyss.hg004.bx.as0.65.nm5.molecule.size2000.trim0.window2000.span100.breaktigs.quast.tsv \
 		discovardenovo-besst.window200.span20.s5000_n20.quast.tsv \
 		discovardenovo-besst.window500.span20.s5000_n20.quast.tsv \
 		discovardenovo-besst.window1000.span20.s5000_n20.quast.tsv \
