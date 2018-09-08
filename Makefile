@@ -659,7 +659,12 @@ hg004.mp.fq.gz: MPHG004-23100079.mp.fq.gz MPHG004-23110109.mp.fq.gz
 
 # Correct assembly errors with NxRepair.
 %.hg004.nxrepair.fa: %.hg004.mp.sort.bam %.fa %.hg004.mp.sort.bam.bai
-	$(time) nxrepair $< $*.fa $*.nxrepair $@
+	$(time) ~/.linuxbrew/bin/nxrepair $< $*.fa $*.hg004.nxrepair.tsv $@
+
+# Correct assembly errors with NxRepair and set parameter T.
+nxrepair_T=2.6
+%.hg004.T$(nxrepair_T).nxrepair.fa: %.hg004.mp.sort.bam %.fa %.hg004.mp.sort.bam.bai
+	$(time) ~/.linuxbrew/bin/nxrepair -T-$(nxrepair_T) $< $*.fa $*.hg004.T$(nxrepair_T).nxrepair.tsv $@
 
 # wgsim
 
