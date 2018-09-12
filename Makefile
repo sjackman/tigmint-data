@@ -128,13 +128,6 @@ reports: \
 tables: \
 	hg004.window2000.span20.s5000_n20.quast.metrics.tsv.md
 
-nxrepair: \
-	abyss2.hg004.nxrepair.fa \
-	abyss2.hg004.nxrepair.abyss-fac.tsv \
-	abyss2.hg004.nxrepair.scaftigs.GRCh38.samtobreak.tsv \
-	abyss2.hg004.nxrepair.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.abyss-fac.tsv \
-	abyss2.hg004.nxrepair.hg004.c$c_e$e_r$r.arcs.a$a_l$l.links.scaftigs.GRCh38.samtobreak.tsv
-
 # Download assemblies from NCBI GIAB.
 
 # ABySS 2.0
@@ -659,11 +652,7 @@ hg004.mp.fq.gz: MPHG004-23100079.mp.fq.gz MPHG004-23110109.mp.fq.gz
 	cat $^ >$@
 
 # Correct assembly errors with NxRepair.
-%.hg004.nxrepair.fa: %.hg004.mp.sort.bam %.fa %.hg004.mp.sort.bam.bai
-	$(time) ~/.linuxbrew/bin/nxrepair $< $*.fa $*.hg004.nxrepair.tsv $@
-
-# Correct assembly errors with NxRepair and set parameter T.
-nxrepair_T=2.6
+nxrepair_T=2.4
 %.hg004.T$(nxrepair_T).nxrepair.fa: %.hg004.mp.sort.bam %.fa %.hg004.mp.sort.bam.bai
 	$(time) ~/.linuxbrew/bin/nxrepair -T-$(nxrepair_T) $< $*.fa $*.hg004.T$(nxrepair_T).nxrepair.tsv $@
 
@@ -870,6 +859,20 @@ sim.abyss.parameters.s5000_n20.quast.tsv: \
 		sim.abyss.sim.lr.bx.as0.65.nm5.molecule.size2000.trim0.window1000.span50.breaktigs.quast.tsv \
 		sim.abyss.sim.lr.bx.as0.65.nm5.molecule.size2000.trim0.window1000.span100.breaktigs.quast.tsv \
 		sim.abyss.sim.lr.bx.as0.65.nm5.molecule.size2000.trim0.window2000.span20.breaktigs.quast.tsv
+	mlr --tsvlite cat $^ >$@
+
+# Aggregate the QUAST results of the NxRepair parameter sweep.
+abyss2.hg004.nxrepair.quast.tsv: \
+		abyss2.quast.tsv \
+		abyss2.hg004.bx.as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.quast.tsv \
+		abyss2.hg004.T2.0.nxrepair.quast.tsv \
+		abyss2.hg004.T2.1.nxrepair.quast.tsv \
+		abyss2.hg004.T2.2.nxrepair.quast.tsv \
+		abyss2.hg004.T2.3.nxrepair.quast.tsv \
+		abyss2.hg004.T2.4.nxrepair.quast.tsv \
+		abyss2.hg004.T2.5.nxrepair.quast.tsv \
+		abyss2.hg004.T2.6.nxrepair.quast.tsv \
+		abyss2.hg004.T2.7.nxrepair.quast.tsv
 	mlr --tsvlite cat $^ >$@
 
 # RMarkdown reports
