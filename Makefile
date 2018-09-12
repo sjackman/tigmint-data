@@ -196,6 +196,7 @@ supernova2.fa: supernova2.stamp
 # See https://github.com/nanopore-wgs-consortium/NA12878
 
 # Downloads the 10x Genomics Chromium linked reads.
+# See https://support.10xgenomics.com/de-novo-assembly/datasets/2.0.0/wfu/
 data/wfu_fastqs.tar:
 	curl -o $@ http://s3-us-west-2.amazonaws.com/10x.files/samples/assembly/2.0.0/wfu/wfu_fastqs.tar
 
@@ -221,7 +222,7 @@ na12878.canu.fa:
 	curl -o $@ http://s3.amazonaws.com/nanopore-human-wgs/canu.35x.contigs.polished2.fasta
 
 # Download the Supernova 2 assembly.
-# See https://support.10xgenomics.com/de-novo-assembly/datasets
+# See https://support.10xgenomics.com/de-novo-assembly/datasets/2.0.0/wfu
 na12878.supernova2.fa:
 	curl http://cf.10xgenomics.com/samples/assembly/2.0.0/wfu/wfu_pseudohap.fasta.gz | gunzip -c >$@
 
