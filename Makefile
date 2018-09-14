@@ -875,6 +875,19 @@ abyss2.hg004.nxrepair.quast.tsv: \
 		abyss2.hg004.T2.7.nxrepair.quast.tsv
 	mlr --tsvlite cat $^ >$@
 
+# Aggregate the QUAST results of NxRepair on the HG004 assemblies.
+hg004.nxrepair.quast.tsv: \
+		abyss2.quast.tsv \
+		abyss2.hg004.T2.4.nxrepair.quast.tsv \
+		abyss2.hg004.bx.as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.quast.tsv \
+		discovardenovo-abyss.quast.tsv \
+		discovardenovo-abyss.hg004.T2.4.nxrepair.quast.tsv \
+		discovardenovo-abyss.hg004.bx.as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.quast.tsv \
+		discovardenovo-besst.quast.tsv \
+		discovardenovo-besst.hg004.T2.4.nxrepair.quast.tsv \
+		discovardenovo-besst.hg004.bx.as0.65.nm5.molecule.size2000.trim0.window$(window).span$(span).breaktigs.quast.tsv
+	mlr --tsvlite cat $^ >$@
+
 # RMarkdown reports
 
 # Compute the assembly metrics for a set of assemblies.
