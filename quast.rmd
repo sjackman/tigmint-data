@@ -54,18 +54,19 @@ metrics <- quast_orig %>%
 			str_replace("sim.abyss", "Sim") %>%
 			str_replace("supernova2", "Supernova") %>%
 			str_replace("supernova", "Supernova") %>%
+			str_replace("\\.(hg004|HNJJKCCXX|sim.lr).*nxrepair", "+NxRepair") %>%
 			str_replace("\\.(hg004|HNJJKCCXX|sim.lr).*breaktigs", "+Tigmint") %>%
 			str_replace("\\.(hg004|HNJJKCCXX|sim.lr).*abyss_scaffold", "+ARCS") %>%
 			str_replace("\\.(hg004|HNJJKCCXX|sim.lr).*links", "+ARCS"),
 		Assembler = str_extract(Assembly, "^(DISCO\\+)?[A-Za-z]+"),
-		Tigmint_ARCS = str_extract(Assembly, "Tigmint\\+ARCS|ARCS|Tigmint"),
-		Tigmint_ARCS = ifelse(!is.na(Tigmint_ARCS), Tigmint_ARCS, Assembler))
+		Scaffolder = str_extract(Assembly, "Tigmint\\+ARCS|ARCS|Tigmint|NxRepair"),
+		Scaffolder = ifelse(!is.na(Scaffolder), Scaffolder, Assembler))
 ```
 
 # Plot NGA50 and breakpoints
-```{r nga50-breakpoints, fig.width=6, fig.height=4, dpi=300}
+```{r nga50-breakpoints, fig.width=6, fig.height=2.5, dpi=300}
 ggplot(metrics) +
-	aes(x = Misassemblies, y = Scaffold_NGA50, label = Tigmint_ARCS, shape = Assembler, colour = Assembler) +
+	aes(x = Misassemblies, y = Scaffold_NGA50, label = Scaffolder, shape = Assembler, colour = Assembler) +
 	geom_point(colour = "black") +
 	geom_text_repel(segment.alpha = 0.5) +
 	scale_x_continuous(name = "QUAST Misassemblies", labels = comma) +
